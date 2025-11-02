@@ -1,0 +1,111 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{parskip} % Better paragraph spacing
+\usepackage{titlesec} % Better section formatting
+\usepackage{graphicx}
+\usepackage{float}
+
+% Define commands for reusable content
+\newcommand{\coursename}{CS-401 Applied Data Analysis}
+\newcommand{\lecturenum}{01}
+\newcommand{\lecturedate}{\today}
+
+% Configure section spacing
+\titlespacing*{\section}{0pt}{2ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\coursename}
+\fancyhead[R]{Lecture \lecturenum}
+\fancyfoot[L]{EPFL - Computer Science}
+\fancyfoot[C]{Author: Jonathan Dutoit}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+
+\begin{document}
+
+\begin{center}
+  {\large EPFL - Computer Science} \\[0.5em]
+  {\Large \textbf{\coursename}} \\[0.5em]
+  {\large Lecture \lecturenum\ --- \lecturedate} \\[0.5em]
+  {\large Author: Jonathan Dutoit} \\
+\end{center}
+
+\vspace{2cm}
+
+\begin{center}
+  {\LARGE \textbf{Introduction to ADA}}
+\end{center}
+
+\vspace{1cm}
+
+\section*{Data analysis}
+“... the process of inspecting, cleaning, transforming, and modeling data with the goal of discovering useful information, suggesting conclusions, and supporting decision-making.”
+
+“Data analysis has multiple facets and approaches, encompassing diverse techniques under a variety of names, in different business, science, and social science domains.”
+
+\section*{Applied Data Analysis}
+\begin{itemize}
+	\item This course is about \textbf{breadth}, not depth
+	\item "What methods, principles, and tools are out there?, rather than "How can I become an expert in deep learning for computer vision applied to images of cats?"
+	\item Data science is a fast-paced, shifting fields
+	\item Obsessing on one tool or technique won't pay off in a few years
+	\item Be ready to explore and keep learning on your own
+\end{itemize}
+
+\textbf{Goal:} Enable you to conduct a full-fledge data science project from start to finish
+
+\section*{Syllabus}
+\begin{itemize}
+	\item Handling data
+	\begin{itemize}
+		\item "Slicing and dicing": obtaining, preparing, juggling data
+	\end{itemize}	
+	\item Visualizing data
+	\begin{itemize}
+		\item Exploration of data, communication of results
+	\end{itemize}
+	\item Describing data
+	\begin{itemize}
+		\item How to support (and be suspicious of) claims about data
+	\end{itemize}
+        \item Regression analysis for disentangling data
+	\begin{itemize}
+		\item How to disentangle datasets with correlated variables
+	\end{itemize}
+	\item Casual analysis of observational data
+	\begin{itemize}
+		\item How to deal with "found data"
+		\item correlation != causation
+	\end{itemize}
+\end{itemize}
+
+\section*{Syllabus (cont'd)}
+\begin{itemize}
+	\item Learning from data
+	\begin{itemize}
+		\item supervised learning
+		\item unsupervised learning
+		\item applied aspects of machine learning
+	\end{itemize}
+	\item Handling specific types of data
+	\begin{itemize}
+		\item handling text data
+		\item handling network data
+	\end{itemize}
+	\item Scaling to massive data
+\end{itemize}
+
+\section*{Grading}
+
+\begin{itemize}
+	\item 15\% Homework assignment
+	\item 50\% Final Exam
+	\item 35\% Project 
+\end{itemize}
+
+
+\end{document}
