@@ -6,3 +6,4 @@
 *.out
 *.synctex.gz
 *.DS_Store
+*.synctex(busy)

@@ -207,7 +207,13 @@ What are the differences?
 A. A machine that hosts resources to be used in the web \\
 B. A computer with high CPU performance \\
 C. A computer with large data storage \\
-D. THe role of a program \\
+D. The role of a program \\
+E. The role of a program that allows users to access large amount of resources \\
+F. None of the above \\
+G. I don't know \\
+
+\textbf{Answer:} D. \\
+Formally, a server is a role at the transport layer, where the program waits for requests to come. In contrast, a client initiates communication to a server. \textbf{Port forwarding} comes from the need of allowing the client to start the connection. 
 \end{tcolorbox}
 
 \section*{Reminder from 1st lecture: Port Numbers}
@@ -284,24 +290,72 @@ Via \textcolor{red}{sockets} = programming interfaces
 	\begin{itemize}
 		\item using the \textcolor{red}{IPv4-mapped IPv5 address} format
 		\item i.e., by appending the IPv4 address to prefix \verb|::ffff:0:0/96|
+		% Quick centered image
+		\begin{figure}[H]
+		    \centering
+		    \includegraphics[width=0.8\textwidth]{ipv6-dual-stack}
+		    \label{fig:LABEL}
+		\end{figure}
 	\end{itemize}
 \end{itemize}
 \begin{itemize}
 	\item Default in Linux, must be enabled for every socket (with \verb|setsockopt| in Windows.
-	\item $2
-	\item $3
+	\item An IPv4 socket \textcolor{blue}{cannot} be dual-stack. Why?
+		\begin{itemize}
+			\item That's because the IPv6 address space is munch longer in bits than the one from IPv4. Hence, an IPv4 socket cannot receive data from an IPv6 source address.
+		\end{itemize}
 \end{itemize}
 
 \section*{How does the Operating System view UDP?}
 
+UDP datagrams are delivered to sockets based on \textcolor{blue}{\textit{dest IP address}} and \textcolor{blue}{\textit{port number}}.
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{os-udp}
+    \label{fig:LABEL}
+\end{figure}
 \textbf{Note}: buffers can overflow! Receiver buffer is needed to assemble messages, sender buffer is necessary for congestion (for example WiFI carrier waits the channel to be free)
 
+\section*{With a dual-stack IPv6 socket?}
+
+\textbf{Socket 5} is bound to any local address, which includes IPv6 and IPv4 addresses, and to port 32456
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{os-dual-stack}
+    \label{fig:LABEL}
+\end{figure}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{User's browser sends DNS query to DNS server, over UDP. What happens if query or answer is lost?}
+
+\vspace{0.3cm}
+
+A. Name resolver in browser waits for timeout, if no answer received before timeout, sends again \\
+B. Messages cannot be lost because UDP assures message integrity \\
+C. UDP detects the loss and retransmits \\
+D. I don't know \\
+
+\textbf{Answer}: A
+\end{tcolorbox}
 \section*{Recap - UDP}
 
 On the sending side: OS sends the UDP messages ASAP, but also uses a buffer to store data if interface is busy. OS may algo fragment the message if needed.
 
 On the receiving side: OS re-assembles IP fragments of UDP message (if needed) and keeps the message in received buffer ready to be read. The message is: 
+\begin{itemize}
+	\item "\textcolor{blue}{\textit{consumed}}" when application reads
+	\item or "\textcolor{blue}{\textit{dropped}}" because of an overflow event
+\end{itemize}
 
+A socket is bound to \textcolor{red}{a single port} and \textcolor{red}{one or multiple IP addresses} of the local host
 \section*{2. TCP offers reliable, in-order delivery}
 
 \textcolor{red}{What?}
@@ -323,5 +377,87 @@ On the receiving side: OS re-assembles IP fragments of UDP message (if needed) a
 			\item TCP knows the allowable maximum segment size (\textcolor{blue}{MSS}) and segments data accordingly $\Rightarrow$ avoids fragmentation at the IP layer
 		\end{itemize}
 \end{itemize}
+
+\subsection*{TCP Basic Operation 1: SEQ and ACK}
+
+\begin{minipage}{0.4\textwidth}
+\begin{itemize}
+	\item The applications at A sends that in blocks of 500 bytes at a slow pace. So, TCP initially sends 500-byte segments
+	\item However, the MSS in this example is 1000 bytes. So, TCP may also merge 2 blocks of data in one segment if this data happens to be available at the send buffer of the socket
+	\item B returns an acknowledgement in the ACK field. The ACK Field is \textcolor{red}{\textit{cumulative}}, so ACK 85001 means: B is acknowledging all byes up to (excluding) number 8501.
+	\item The out-of-order received data is kept in the buffer until all data is received correctly - this is not visible to the application. 
+\end{itemize}
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.7\textwidth}
+\centering
+\includegraphics[width=\linewidth]{tcp1}
+\end{minipage}
+
+\subsection*{TCP Basic Operations 2: SACK and optimized segmentation (if possible)}
+
+\begin{minipage}{0.4\textwidth}
+In addition to the ACK field, most TCP implementation also use the SACK field (\textit{\textcolor{red}{Selective Acknowledgement}}).
+\begin{itemize}
+	\item At line 7, B acknowledges all bytes up to 8501 and in the range 9501:10000. Since the set of acknowledged byes is not contiguous, the SACK option is used. It contains up to 3 blocks that are acknowledged in addition to the range described by the ACK field
+	\item At line 8, A detects that the bytes 8501:9500 were lost and re-sends them ASAP without waiting for a timeout. Since the MSS is 1000 bytes, only one packet it sent (optimized segmentation). 
+	\item When receiving packet 8, B can deliver bytes 9001:10000 because packet 5 was received and kept in the receive buffer.
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.7\textwidth}
+\centering
+\includegraphics[width=\linewidth]{tcp2}
+\end{minipage}
+
+\subsection*{Receive Buffer}
+
+TCP receiver uses a \textit{\textbf{receive buffer}} = \textcolor{red}{\textit{re-sequencing}} buffer to store incoming packets before delivering them to the application. 
+
+\textcolor{red}{\textit{Why}} invented?
+\begin{itemize}
+	\item Application may not be ready to consume/read data
+	\item Packets may need re-sequencing; out-of-order data is stored but is \textcolor{red}{\textit{not visible}} to application
+\end{itemize}
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{tcp3}
+    \label{fig:LABEL}
+\end{figure}
+
+\subsection*{TCP uses a sliding window}
+
+\begin{minipage}{0.5\textwidth}
+\textcolor{red}{\textit{Why?}} \\
+\begin{itemize}
+	\item Out-of-order packets may trigger buffer \textcolor{red}{\textit{overflows}} \\
+	\item The sliding window \textcolor{blue}{\textit{limits}} the number of data
+
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\textwidth}
+\centering
+\includegraphics[width=\linewidth]{tcp4}
+\end{minipage}
+
+\subsection*{How does the sliding window work?}
+
+\begin{minipage}{0.4\textwidth}
+\begin{itemize}
+	\item Suppose: window size = 4000B; each segment = 1000B. \\
+	\item Only seq numbers within the window can be sent (and are sent if enough data exist in the socket) \\
+	\item \texttt{lower window edge = smallest non-ack'ed sequence number} \\
+	\item \texttt{upper window edge = lower\_edge + window\_size} \\
+\end{itemize}
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\textwidth}
+\centering
+\includegraphics[width=\linewidth]{tcp5}
+\end{minipage}
 
 \end{document}	

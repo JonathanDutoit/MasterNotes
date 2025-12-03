@@ -42,15 +42,54 @@
   {\large Professor: \professor} \\[0.5em]
 \end{center}
 
-\vspace{2cm}
+\vspace{1cm}
 
 \begin{center}
   {\LARGE \textbf{Transporter Layer Continued}}
 \end{center}
 
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{transport-layer}
+    \label{fig:LABEL}
+\end{figure}
 \vspace{1cm}
 
-w
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Window size = 4'000 bytes, one packet = 1'000 bytes. At time $t_0$, the usable part of the sliding window is 4000, and there is a lot of data in the socket to be sent. So, the sender sends 4 segments. At time  $t_1$, sender...}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{sliding-window-question}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.2cm}
+
+A. Can send segment S=4\\
+B. Cannot send segment S=4 \\
+C. It depends on whether data was consumed by application \\
+D. I do not know \\
+
+\textbf{Answer:} B. \\ 
+Packet 4 it outside the window [0:3] and cannot be sent. It has to wait until the loss of packet 0 is repaired, which happens at time $t_2$
+\end{tcolorbox}
+
+\begin{itemize}
+	\item Sender needs a \textcolor{blue}{\textit{retransmission buffer}} to hold unack'ed data; its size is equal to the window size. 
+	\item Segments are removed from the resequencing/receive buffer when they are finally put in order and application reads them. 
+\end{itemize}
+
+\subsection*{A fixed-size (static) window cannot prevent receive-buffer \textcolor{red}{\textit{overflows}}}
+
+
 \section*{TCP Sockets (simplified scenario)}
 
 \section*{Why both TCP and UDP?}
