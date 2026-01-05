@@ -126,7 +126,7 @@ Advantage: \textbf{less complex}. Disadvantage: \textbf{Shared access between se
 
 \section*{Demilitarized Zone (DMZ)}
 
-A physical or logical subnetwork that contains and exposes an organization's external-facing services to an untrusted network, e.g. Iternet
+A physical or logical subnetwork that contains and exposes an organization's external-facing services to an untrusted network, e.g. Internet
 
 An external network node can access only what is exposed in the DMZ
 
@@ -224,7 +224,7 @@ Before a packet is sent over the public network, it is encrypted and encapsulate
 
 \textbf{Typical networks}
 \begin{itemize}
-	\item IP,sec, official IETF standard
+	\item IPSec, official IETF standard
 	\item OpenVPN, open source software, based on TLS
 	\item WireGuard, built into the Linux Kernel
 	\item Proprietary protocols (e.g., Cisco AnyConnect), offer convenience in configuration and maintenance
@@ -327,6 +327,7 @@ The firewall can be configured to only allow the proxy to access web sites, user
 \textbf{MitM Connections}
 
 The proxy can be configured to intercept HTTPS traffic
+
 Rather than forwarding the handshake, it pretends to be the server
 \begin{itemize}
 	\item To achieve this it must generate fake certificates
@@ -376,7 +377,7 @@ WAFs typically offer the following protections:
 	\item Block any request that seems to contain an attack (XSS, SQL, injection)
 	\item Limit the number of requests to protect against DoS attacks (your site will still be unreachable, but at least your internal server still works)
 	\item Block an IP address for a certain time after detection of an attack
-	\item Authenticate users (to prohibit unauthenticated users from interacting
+	\item Authenticate users (to prohibit unauthenticated users from interacting)
 
 \end{itemize}
 
@@ -389,7 +390,7 @@ There is a free open source set of rules (core rule set) with thousands of rules
 SQL injection examples:
 \begin{itemize}
 	\item "@rx (?i)union.*?select.*?from"
-	\item"@rx (?i:sleep\(\s*?\d*?\s*?\)|benchmark\(.*?\,.*?\))"
+	\item"@rx (?i:sleep\textbackslash(\textbackslash s*?\textbackslash d*?\textbackslash s*?\textbackslash)$\mid$benchmark\textbackslash(.*?\textbackslash ,.*?\textbackslash ))"
 \end{itemize}
 \section*{Intrusion Detection Systems}
 
