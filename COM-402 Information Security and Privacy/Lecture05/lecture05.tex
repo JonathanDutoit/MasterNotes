@@ -64,24 +64,22 @@
 
 Developer may only select 2 of 3 options 
 
-Using a "safe"programming languages makes 2-out-of-3 rule unnecessary 
+Using a "safe" programming languages makes 2-out-of-3 rule unnecessary 
 
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.2\textwidth]{2-out-of-3}
+    \includegraphics[width=0.4\textwidth]{2-out-of-3}
     \label{fig:LABEL}
 \end{figure}
 
 \section*{Consequences of Memory Safety Vulnerabilities}
 
-Memory safety means that an attacker can modify your memory. If you think about the process that is executing code (load, compute, store machine), thus the attacker has the power to modify the memory and make your program do arbitrary things. Memory safety issues are \textbf{really \textcolor{red}{severe}}. 
+Memory safety issue  means that an attacker can modify your memory. If you think about the process that is executing code (load, compute, store machine), thus the attacker has the power to modify the memory and make your program do arbitrary things. Memory safety issues are \textbf{really \textcolor{red}{severe}}. 
 
-In 2022, memory-safety issues composed 86\% of critical severity security vulnerabilities, highest ranking
+In 2022, memory-safety issues composed 86\% of critical severity security vulnerabilities, highest ranking. 
 
-\section*{Memory Safety Violations are Most Common}
-
-A major portion (224/1228 $\sim$ 18\%) of bugs found by SyzBot is still memory corruption errors in Linux Kernel. 
+\textbf{Memory safety violations are most common:}A major portion (224/1228 $\sim$ 18\%) of bugs found by SyzBot is still memory corruption errors in Linux Kernel. 
 
 \section*{Memory Safety}
 
@@ -173,7 +171,7 @@ If a type system is sound, then expressions accepted by that type system must ev
 \begin{itemize}
 	\item More flexible (at least without complex type system)
 	\item Fewer type declarations
-	\item Better for quick & dirty programming ("scripting")
+	\item Better for quick and dirty programming ("scripting")
 \end{itemize}
 
 \section*{Declared/Inferred Types}
@@ -345,7 +343,7 @@ Every region of memory has a length associated with it
 Overhead for enforcing spatial memory safety for C code is significant
 \begin{itemize}
 	\item Softbound reporter 67\% overhead
-	\item Unfortunately, C's arbitrary pointer arithmetic, conflation of pointers and arrays, and programmer-visible memory layout make retrofitting C/C++ with spatial safety guarantees extremely challenging.”
+	\item Unfortunately, C's arbitrary pointer arithmetic, conflation of pointers and arrays, and programmer-visible memory layout make retrofitting C/C++ with spatial safety guarantees extremely challenging.
 \end{itemize}
 
 Overhead for Java is not nearly as large
@@ -685,7 +683,7 @@ JavaScript engine bugs remain a source of critical browser vulnerabilities.
 
 Compartmentalization can enforce \textbf{principle of least privilege}
 
-Break a comlex system into small components
+Break a complex system into small components
 
 Limit the access of entities to only what is necessary
 

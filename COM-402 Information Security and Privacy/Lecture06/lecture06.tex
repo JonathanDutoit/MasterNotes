@@ -87,7 +87,7 @@ The \textbf{Top 10} project documents the 10 most critical security risks to web
 			  CWE-201: Insertion of Sensitive Information Into Sent Data, and \\
 			  CWE-352: Cross-Site Request Forgery
 			\item Reduce attack surface by "deny by default"
-			\item Implement access control mechanisms once, reuse through app (use session)
+			\item Implement access control mechanisms once, reuse through app (user session)
 			\item Log access control failures
 			\item Rate limit API calls
 			\item \textbf{Real world example}: Accessing everyone's Google Drive files with Google Classrooms. 
@@ -114,8 +114,8 @@ The \textbf{Top 10} project documents the 10 most critical security risks to web
 	\item \textbf{A04 Insecure Design}: Insecure design is a broad category representing different weakness, expressed as "missing or ineffective control design"
 		\begin{itemize}
 			\item CWE-209: Generation of error message containing sensitive information, \\
-			  CWE-256: Unprotected Storage of Credentials, 
-			  CWE-501: Trust Boundary Violation, and
+			  CWE-256: Unprotected Storage of Credentials, \\
+			  CWE-501: Trust Boundary Violation, and \\
 			  CWE-522: Insufficiently Protected Credentials
 			\item Prevent by establishing secure development lifecycle
 			\item Use threat modeling where feasible
@@ -148,7 +148,7 @@ The \textbf{Top 10} project documents the 10 most critical security risks to web
 	\item \textbf{A08 Software and Data Integrity Failures}: Software and data integrity failures relate to code and infrastructure that does not protect against integrity violations. An example of this is where an application relies upon plugins, libraries, or modules from untrusted sources, repositories, and content delivery networks (CDNs)
 		\begin{itemize}
 			\item CWE-829: Inclusion of Functionality from Untrusted Control Sphere, \\
-			  CWE-494: Download of Code Without Integrity Check, and
+			  CWE-494: Download of Code Without Integrity Check, and \\
 			  CWE-502: Deserialization of Untrusted Data
 			\item Mitigate by verifying (through signatures) that data comes from verified source and has not been tampered
 			\item Review code and configuration changes to limit potential mistakes
