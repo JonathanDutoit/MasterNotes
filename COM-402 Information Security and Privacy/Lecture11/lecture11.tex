@@ -84,9 +84,9 @@
 \begin{itemize}
 	\item Privacy is not about hiding, privacy is about preventing harm
 	\item Privacy has many definitions: know your goal and adversary
-	\item Where we need privacy when designing privacy-preserving systems
+	\item Where we need privacy: when designing privacy-preserving systems
 	\item A good privacy evaluation requires good threat modeling
-	\item Some example Privacy Enhancing Technologies
+	\item Some example of Privacy Enhancing Technologies
 \end{itemize}
 
 \textbf{Disclaimer}: you will not become a privacy engineer today. This is a very light introduction.
@@ -107,7 +107,7 @@
 	
 \end{itemize}
 
-\vspace{0.5cm}
+\newpage
 
 \begin{center}
   {\LARGE \textbf{Why Privacy Matters}}
@@ -130,7 +130,7 @@ Privacy is default by law:
 No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks.
 \end{tcolorbox}
 
-But, in our digital society: many only services collect private data. Thin line between the usefulness of information and data collected.
+But, in our digital society: many online services collect private data. Thin line between the usefulness of information and data collected.
 
 \textbf{So what if they know...?} I have nothing to hide!
 
@@ -156,7 +156,7 @@ Target advertising can also be used to discriminate. Of the 500 simulated users,
 
 \section*{Facebook / Cambridge Analytica (2016)}
 
-Context: CA obtained 50M records from Facebook in 2013 through "survey"app that leaked friends' information as well as from the user answering the survey
+Context: CA obtained 50M records from Facebook in 2013 through "survey" app that leaked friends' information as well as from the user answering the survey
 
 CA created a system that can target voters based on psychological profile
 
@@ -164,7 +164,7 @@ Was used to target US voters in 2016 elections and UK voters in Brexit
 
 \subsection*{Consequences}
 
-"Brexit vote"and US presidential elections: two leading democracies, find themselves internally polarized. 
+"Brexit vote" and US presidential elections: two leading democracies, find themselves internally polarized. 
 
 \subsection*{Attribute-based targeting}
 
@@ -174,9 +174,9 @@ Each Facebook user has assigned attributes
 	\item based on Likes, 3rd-party browsing (tracking via "Like" button), etc
 	\item bought form "Partner" companies (Data brokers)
 \end{itemize}
-> 1200 well-defined attributes
+$>$ 1200 well-defined attributes
 
-> 250k "loosely defined" attributes (from text-processing)
+$>$ 250k "loosely defined" attributes (from text-processing)
 
 Advertiser select attributes, Facebook relevant ads. Facebook doesn't reveal user identities.
 
@@ -189,13 +189,13 @@ Advertiser can bulk-upload a database (bough from data brokers, etc.) to Faceboo
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{data-broker}
+    \includegraphics[width=0.8\textwidth]{databroker}
     \label{fig:LABEL}
 \end{figure}
 
 Facebook discovers "similar" people (that are not listed by Data Brokers) based on interests or browsing patterns. 
 
-Can be tailored per region, sex, marital status & other attributes. 
+Can be tailored per region, sex, marital status and other attributes. 
 
 \textbf{Not really ethical!}
 
@@ -262,12 +262,12 @@ This can be done either \textbf{\textit{directly}} or \textbf{\textit{indirectly
 
 Privacy is subjective: hard to define
 
-In this lecture: three ways of thinking about privacy depending on what goal are we trying to achieve: they way of reasoning about harm prevention
+In this lecture: three ways of thinking about privacy depending on what goal are we trying to achieve: they are a way of reasoning about harm prevention
 
-Different mindsets lead to different technologies - ad different protection!
+Different mindsets lead to different technologies - and different protection!
 
 \section*{Privacy as Confidentiality}
-“The right to be let alone” -Warren & Brandeis (1890)
+“The right to be let alone” -Warren and Brandeis (1890)
 
 "the individual shall have full protection in person and in property."
 
@@ -357,7 +357,7 @@ Limitations: only protects from other users, service provider is trusted!
 \subsection*{A recurrent function \textit{creep} example: identity systems}
 Aadhaar - India's "optional" Unique Identity identification number scheme 
 
-> 1 billion people stored in the database
+$>$ 1 billion people stored in the database
 
 \textbf{Goal}: \textit{promoted as providing the poor with an identity}
 
@@ -737,7 +737,7 @@ $d_i \in [0, 100]$, privacy breached if adversary learns some $d_i$ plus or minu
 \end{itemize}
 
 \begin{itemize}
-	\item $\textbf{Basic philosophy}: instead of the real answer to a qurry, add random noise to output, such that by a \textcolor{blue}{small change in the database (someone joins or leaves), the distribution of the answer does not change much}
+	\item \textbf{Basic philosophy}: instead of the real answer to a querry, add random noise to output, such that by a \textcolor{blue}{small change in the database (someone joins or leaves), the distribution of the answer does not change much}
 	\item \textbf{A new privacy goal}: \textcolor{blue}{minimize the increased risk} incurred by an individual when joining (or leaving) a given database
 	\item Differential Privacy is a privacy notion \textbf{NOT} a meachanism $\Rightarrow$ We use mechanisms to  \textit{achieve} differential privacy (e.g., add random noise)
 \end{itemize}
@@ -762,7 +762,7 @@ Records’s inclusion  in the computation does not make it \textit{significantly
 
 An algorithm A satisfies $\epsilon$-diffrential privacy if
  \begin{itemize}
-	 \item For \textbf{every pair or neighboring databases} ($D$, $D_{-r}$, differing only in row r
+	 \item For \textbf{every pair or neighboring databases} ($D$, $D_{-r}$, differing only in row r)
 	\item For \textbf{every subset S} of \textbf{possible output values} taken by A 
 \end{itemize}
 \[
@@ -792,20 +792,20 @@ An algorithm A satisfies $\epsilon$-diffrential privacy if
 	\item \textbf{Input pertubation}
 		\begin{itemize}
 			\item Add noise directly to the database (\textcolor{red}{$\neq$} perturbed database can be published) \\
-			\textcolor{green}{+} independent of the algorithm \textcolor{green}{&} easy to reproduce \\
+			\textcolor{green}{+} independent of the algorithm \textcolor{green}{and} easy to reproduce \\
 			\textcolor{red}{-} determing the amount of required noise is difficult
 		\end{itemize}
 	\item \textbf{Output perturbation}
 		\begin{itemize}
 			\item Add noise to the function (statistic) output \\
-				\textcolor{green}{+} easier to control privacy \textcolor{green}{&} better guarantees than input perturbation \\
+				\textcolor{green}{+} easier to control privacy \textcolor{green}{and} better guarantees than input perturbation \\
 				\textcolor{red}{-} results cannot be reproduced
 		\end{itemize}
 	\item \textbf{Algorithm Perturbation}
 		\begin{itemize}
 			\item Inherently add noise to the algo \\
 			\textcolor{green}{+} algorithm can be optimized with the noise addition \\
-			\textcolor{red}{-} difficult to generalize \textcolor{red}{&} depends on the inputs
+			\textcolor{red}{-} difficult to generalize \textcolor{red}{and} depends on the inputs
 		\end{itemize}
 \end{itemize}
 
