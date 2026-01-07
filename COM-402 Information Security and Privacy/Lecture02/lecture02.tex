@@ -168,14 +168,14 @@ So, it's perfectly secure but impractical. For all of the crypto systems that we
 Why use \textbf{XOR} and not \textbf{addition}?
 \begin{itemize}
 	\item I.e. ciphertext = plaintext + key
-	\item \textcolor{red}{Potential information leaks! (violates confidentiality}. 
+	\item \textcolor{red}{Potential information leaks! (violates confidentiality)}. 
 \end{itemize}
 
 Ex: messages and keys chosen from the space of positive integers
 \begin{itemize}
 	\item Let plaintext = 3, key = 10
 	\item Ciphertext = 3 + 10 = 13
-	\item \textcolor{red}{Adversary can infer that plaintext < 13 !}
+	\item \textcolor{red}{Adversary can infer that plaintext $<$ 13 !}
 \end{itemize}
 
 
@@ -216,7 +216,7 @@ Two possible pitfalls with stream ciphers:
 
 \textbf{Malleability}: Flipping one bit of the ciphertext will flip the same bit in the plaintext
 \begin{itemize}
-	\item e.g., if you know which bit encodes the sign of a value you can change a payment of $100 to -$100
+	\item e.g., if you know which bit encodes the sign of a value you can change a payment of $100$ to $-100$
 	\item you should always add an \textbf{integrity check} when encrypting data!
 \end{itemize}
 
@@ -449,7 +449,7 @@ NB: if the hash function has some weaknesses, the complexity might be lower.
   arc=3mm,             % rounded corners
   left=4mm, right=4mm, top=2mm, bottom=2mm % padding
 ]
-Collisions in naively: $2^{60}$ operations
+Collisions in naively: $2^{160}$ operations
 
 better: $2^{80}$ operations
 
@@ -478,9 +478,9 @@ In practice, it took $2^{63.1}$ operations to find a preimage.
 \textbf{SHA-2}: 224/256/384/512 bits, not broken, but related to SHA-1
 (\textcolor{green}{use})
 
-\textbf{SHA-3}: 224/256/384/512 bits, no weakness know(\textcolor{green}{prefer})
+\textbf{SHA-3}: 224/256/384/512 bits, no weakness known (\textcolor{green}{prefer})
 
-\textbf{BLAKE3}: 224/256/384/512 bits, no weakness know, faster, not standard (\textcolor{green}{fine})
+\textbf{BLAKE3}: 224/256/384/512 bits, no weakness known, faster, not standard (\textcolor{green}{fine})
 
 \begin{tcolorbox}[
   colback=yellow!15,     % background color
@@ -489,7 +489,7 @@ In practice, it took $2^{63.1}$ operations to find a preimage.
   arc=3mm,             % rounded corners
   left=4mm, right=4mm, top=2mm, bottom=2mm % padding
 ]
-Key takeway: complex enough to be hard to brute force but reasonable to compute. Which means that even on today hardware, we need to able to computer. Even on embedded systems too.  
+Key takeway: complex enough to be hard to brute force but reasonable to compute. Which means that even on today hardware, we need to able to compute. Even on embedded systems too.  
 
 \end{tcolorbox}
 
@@ -685,7 +685,7 @@ An attacker who observes A and B cannot find K
 
 \textbf{Security Properties}
 
-The reverse function of $A = g^{a} \% p$ is difficult (hard) due to discrete logarithm. Of course, numbers $p$ and  $g$ but be chosen well (large enough). Standard usually define  $p$ and  $g$
+The reverse function of $A = g^{a}$ mod p is difficult (hard) due to discrete logarithm. Of course, numbers $p$ and  $g$ but be chosen well (large enough). Standard usually define  $p$ and  $g$
 
 \textbf{Problem}: Powerful man in the middle attack. Mallory (malicious attacker) can do a Diffie-Hellman exchange with both Alice and Bob, thus having both keys to communicate with both of them. 
 
@@ -725,7 +725,7 @@ Public key cryptography setup:
 
 RSA:
 \begin{itemize}
-	\item Pick primes p, q, computer \textbf{n = pq}
+	\item Pick primes p, q, compute \textbf{n = pq}
 	\item Compute  $\phi(n) = (p-1)(q-1)$
 	\item Pick \textbf{e} such that $1 < e < \phi(n)$ and  $gcd(\phi(n), e) = 1$
 	\item In practice, use small prime  \textbf{e = $2^{16} + 1$}
@@ -773,7 +773,7 @@ Scheme above is trivially insecure. Use a padding scheme (preferably RSA-OAEP)
 \end{itemize}
 
 
-\section*{(Lab): Hastad's broadcast attack for RSA with low public explonent.}
+\section*{(Lab): Hastad's broadcast attack for RSA with low public exponent.}
 
 \begin{tcolorbox}[
   colback=gray!15,     % background color
@@ -885,7 +885,7 @@ The Certification Authority (\textbf{CA}) certifies the keys by signing them. It
 \begin{itemize}
 	\item may ask for an email
 	\item may ask for a copy of your passport
-	\item this is documented in the Certificate Practice Statement (\textbf{CPS}) of the CA)
+	\item this is documented in the Certificate Practice Statement (\textbf{CPS}) of the CA
 \end{itemize}
 
 If we trust the key of the CA, we can trust all keys signed by the CA. A 'signed key' is a \textbf{certificate}. It contains at least:
@@ -997,7 +997,7 @@ Public key crypto:
 
 \begin{itemize}
 	\item The CA has signed the server's certificate (and its own root certificate)
-	\item The server signs the key exchange to prove it hold the private key
+	\item The server signs the key exchange to prove it holds the private key
 	\item Elliptic curve Diffie Hellman is used to exchange a symmetric key
 \end{itemize}
 
@@ -1005,7 +1005,7 @@ Symmetric crypto:
 
 \begin{itemize}
 	\item AES block cipher is used in CBC mode for encryption
-	\item SHA has is used for HMAC, for key derivations
+	\item SHA is used for HMAC, for key derivations
 \end{itemize}
 
 \section*{Implementing TLS}
