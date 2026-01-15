@@ -151,9 +151,6 @@ You work every week:
 
 Start preparing for the final exam early. 
 
-
-\vspace{2cm}
-
 \section*{Objective of this lecture}
 
 \begin{itemize}
@@ -161,14 +158,20 @@ Start preparing for the final exam early.
 	\item Know what MAC addresses, IP addresses and DNS names are
 \end{itemize}
 
-\section*{Computer Networks: A \textcolor{red}{layered} architecture of \textcolor{red}{protocols}}
+\newpage
+
+\begin{center}
+  {\LARGE \textbf{Computer Networks: A \textcolor{red}{layered} architecture of \textcolor{red}{protocols}}}
+\end{center}
+
+\vspace{1cm}
 
 protocols (= set of rules and exchanged messages)
 
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{computer-networks-diagram}
+    \includegraphics[width=1\textwidth]{images/computer-networks-diagram}
     \caption{Computer networks diagram}
     \label{fig:LABEL}
 \end{figure}
@@ -186,7 +189,7 @@ protocols (= set of rules and exchanged messages)
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{application-layer}
+    \includegraphics[width=1\textwidth]{images/application-layer}
     \caption{application layer diagram}
     \label{fig:LABEL}
 \end{figure}
@@ -196,7 +199,7 @@ Exercise: type curl -v www.google.com in the terminal and analyse all informatio
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{application-layer-exercise}
+    \includegraphics[width=0.7\textwidth]{images/application-layer-exercise}
     \caption{curl google.com}
     \label{fig:LABEL}
 \end{figure}
@@ -207,7 +210,7 @@ Exercise: type curl -v www.google.com in the terminal and analyse all informatio
 	\item \textcolor{red}{Why?} We need a system/protocol for translating names to addresses 
 	\begin{itemize}
 		\item e.g.: ssc.epfl.ch $\Leftrightarrow
-$ 128.178.222.83, smtp.sunrise.ch --- 212.35.39.69
+$ 128.178.222.83; smtp.sunrise.ch $\Leftrightarrow$ 212.35.39.69
 	\end{itemize}
 \item names = human-friendly \textcolor{blue}{synonyms} of IP addresses, with some \textcolor{red}{structure}
 	\item \textcolor{red}{What?}
@@ -220,7 +223,7 @@ $ 128.178.222.83, smtp.sunrise.ch --- 212.35.39.69
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{addresses-strucutre}
+    \includegraphics[width=0.7\textwidth]{images/addresses-strucutre}
     \caption{addresses structure examples}
     \label{fig:LABEL}
 \end{figure}
@@ -229,7 +232,7 @@ $ 128.178.222.83, smtp.sunrise.ch --- 212.35.39.69
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{application-layer-example}
+    \includegraphics[width=1\textwidth]{images/application-layer-example}
     \caption{application layer example}
     \label{fig:LABEL}
 \end{figure}
@@ -281,7 +284,7 @@ UDP: DNS, gaming (we don't care bout losses so much), train timetable.
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{network-layer-diagram}
+    \includegraphics[width=0.7\textwidth]{images/network-layer-diagram}
     \label{fig:LABEL}
 \end{figure}
 
@@ -314,7 +317,7 @@ UDP: DNS, gaming (we don't care bout losses so much), train timetable.
 	\item The algorithms that calculate these paths are called \textcolor{red}{routing algorithms}
 \end{itemize}
 
-\section*{Most important protocol: IP (Internet protocol}
+\section*{Most important protocol: IP (Internet protocol)}
 
 \begin{itemize}
 	\item interconnects multiple \textcolor{blue}{local area networks} (LANs)
@@ -334,7 +337,7 @@ This is why UDP is not reliable: because of the non-reliability of IP.
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{subnets-diagram}
+    \includegraphics[width=0.9\textwidth]{images/subnets-diagram}
     \caption{Routers are only placed in the edge of a subnet.}
     \label{fig:LABEL}
 \end{figure}
@@ -452,7 +455,7 @@ Possible services:
 \hfill
 \begin{minipage}{0.4\textwidth}
 \centering
-\includegraphics[width=\linewidth]{mac-diagram}
+\includegraphics[width=\linewidth]{images/mac-diagram}
 \end{minipage}
 
 \section*{Router vs Switches}
@@ -464,7 +467,7 @@ Possible services:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{router-switches}
+    \includegraphics[width=0.9\textwidth]{images/router-switches}
     \label{fig:LABEL}
 \end{figure}
 
@@ -480,7 +483,7 @@ Possible services:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{onion-view}
+    \includegraphics[width=1\textwidth]{images/onion-view}
     \label{fig:LABEL}
 \end{figure}
 
@@ -489,7 +492,7 @@ Possible services:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{physical-layer}
+    \includegraphics[width=0.7\textwidth]{images/physical-layer}
     \label{fig:LABEL}
 \end{figure}
 
@@ -524,7 +527,7 @@ Possible services:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{everything-together}
+    \includegraphics[width=1\textwidth]{images/everything-together}
     \label{fig:LABEL}
 \end{figure}
 
@@ -549,13 +552,53 @@ The orange and green packets from MAC are called \textbf{MAC frame}
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{network-delays}
+    \includegraphics[width=0.7\textwidth]{images/network-delays}
     \label{fig:LABEL}
 \end{figure}
 
+\textbf{Example}: Time it takes to send one packet of 1kB ($\sim$ 8000 bits)
+
+* assuming \textit{\textbf{no}} queueing, \textit{\textbf{no}} processing delays; say there is only one link...
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/processing-times-table}
+    \label{fig:LABEL}
+\end{figure}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Suppose that processing delays are insignificant, why is packet switching more efficient than relaying the entire message as first networks did?}
+\vspace{0.3cm}
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/network-delays}
+    \label{fig:LABEL}
+\end{figure}
+A. It reduces buffer required in routes \\
+B. It reduces the bit error rates \\
+C. It increases the (information-theoretic) capacity of the links \\
+D. The end-to-end overall delay is reduced \\
+
+\textbf{Answer:} A and D. 
+\begin{itemize}
+	\item End-to-end delay is reduced
+	\item Required buffer space at intermediate systems is reduced
+	\item Bit error rate remains the same, but the probability that a packet is corrupted because of a bit error is smaller for an entire message (as a message is typically larger than a single packet).
+	\item Capacity is not increased
+\end{itemize}
+
+\end{tcolorbox}
 \section*{Throughput}
 
-Throughput = $\frac{usefulData}{timeUnit}$, with same units as the bit rate. 
+Throughput = $\frac{\text{\# of useful data bits at destination}}{\text{time unit}}$, with same units as the bit rate. 
+
 
 Even if computed over a single link, it is not the same as the bit rate. Why?
  \begin{itemize}
@@ -563,4 +606,38 @@ Even if computed over a single link, it is not the same as the bit rate. Why?
 	\item \textcolor{red}{waiting times}: a host at one end may wait a response from the other end before transmitting
 \end{itemize}
 
+\textbf{Example}: The Stop $\&$ Go Protocol
+
+Simple protocol for repairing packet losses:
+\begin{itemize}
+	\item \textbf{A} sends packets to \textbf{B}; returns an \textit{\textcolor{blue}{acknowledgement}} packet immediately to confirm that \textbf{B} has receive the packet;
+	\item \textbf{A} awaits for acknowledgement before sending a new packet; if no acknowledgement comes after a delay $\mathbf{T_1},$ then \textbf{A} \textcolor{red}{"timeouts"} and \textit{\textcolor{red}{retransmits}}
+\end{itemize}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/stop-and-go}
+    \label{fig:LABEL}
+\end{figure}
+
+\section*{Throughput of the Stop $\&$ Go Protocol}
+
+\textit{L} = packet size; \textit{b} = channel bit rate; \textit{D} = propagation delay; \textit{L'} = ack size
+
+Assume in each cycle, we transmit only one packet, \textit{\textcolor{red}{no}} loss.
+\begin{itemize}
+	\item In each cycle, \textit{L} useful bits are transmitted
+	\item The cycle lasts \textit{T + 2D + T'}.
+	\item Throughput = $\frac{L}{T + 2D + T'} = \frac{b}{1 + \frac{L'}{L} + \frac{2Db}{L}}$
+\end{itemize}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/stop-and-go-2}
+    \label{fig:LABEL}
+\end{figure}
+
+We wills see that TCP does better than Stop$\&$Go using a smart mechanism (\textit{\textcolor{blue}{sliding window}})
 \end{document}	
