@@ -71,7 +71,7 @@
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{nat}
+    \includegraphics[width=0.7\textwidth]{images/nat}
     \label{fig:LABEL}
 \end{figure}
 
@@ -99,7 +99,7 @@
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{natserver}
+    \includegraphics[width=0.8\textwidth]{images/natserver}
     \label{fig:LABEL}
 \end{figure}
 
@@ -118,8 +118,9 @@ Recall: NAT was motivated by lack of IPv4 addresses. But in IPv6, home routers o
 	\item Some systems still use NAT with IPv6, if local network receives \textcolor{red}{only one IPv6} address, not an entire prefix
 	\item \textcolor{red}{How?}
 		\begin{itemize}
-			\item Use \textcolor{blue}{link local IPv6 addresses} for internal network $\Righarrow$ the internal network is a  \textcolor{blue}{single LAN} (only one subnet)
+			\item Use \textcolor{blue}{link local IPv6 addresses} for internal network $\Rightarrow$ the internal network is a  \textcolor{blue}{single LAN} (only one subnet)
 		\end{itemize}
+				
 	\item Typical case in virtualization e.g. Virtual Box ("NAT network")
 \end{itemize}
 
@@ -127,7 +128,7 @@ Recall: NAT was motivated by lack of IPv4 addresses. But in IPv6, home routers o
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{gcnat}
+    \includegraphics[width=0.7\textwidth]{images/gcnat}
     \label{fig:LABEL}
 \end{figure}
 
@@ -152,7 +153,7 @@ Recall: NAT was motivated by lack of IPv4 addresses. But in IPv6, home routers o
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{other-nat-types}
+    \includegraphics[width=1\textwidth]{images/other-nat-types}
     \label{fig:LABEL}
 \end{figure}
 
@@ -187,7 +188,7 @@ Moreover, only the external host that receives a packet can send a packet back t
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{nat-question}
+    \includegraphics[width=0.8\textwidth]{images/nat-question}
     \label{fig:LABEL}
 \end{figure}
 
@@ -213,7 +214,7 @@ Moreover, only the external host that receives a packet can send a packet back t
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{nat-question-2}
+    \includegraphics[width=0.6\textwidth]{images/nat-question-2}
     \label{fig:LABEL}
 \end{figure}
 
@@ -242,7 +243,7 @@ hosts (end-systems) that a typical NAT can support?}
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{nat-question-3}
+    \includegraphics[width=0.7\textwidth]{images/nat-question-3}
     \label{fig:LABEL}
 \end{figure}
 \vspace{0.3cm}
@@ -259,9 +260,8 @@ hosts (end-systems) that a typical NAT can support?}
 number of entries it can have is equal to the overall number of the TCP/UDP port numbers that it is
 allowed to use (i.e. that are not reserved for other purposes and not blocked by a firewall). This number
 is smaller than 2*65536, since each port number is 16bits long; hence for each of TCP and UDP, we
-have 2^16 = 65536 possible numbers.
-	\item The latter is smaller than the overall number of private IP addresses in the allocated block (which is
-2^24 addresses, because the subnet mask is /8).
+have $2^{16}$ = 65536 possible numbers.
+	\item The latter is smaller than the overall number of private IP addresses in the allocated block (which is $2^{24}$ addresses, because the subnet mask is /8).
 	\item So, it is also the max number of hosts that the NAT can support—the max number of hosts is achieved
 by assuming that each host has only one UDP or TCP connection with some other host outside the LAN.
 \end{itemize}
@@ -314,7 +314,7 @@ Example (IPv4):
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{dhcp}
+    \includegraphics[width=0.9\textwidth]{images/dhcp}
     \label{fig:LABEL}
 \end{figure}
 \section*{(Self)-Autoconfiguration in IPv4}
@@ -324,7 +324,7 @@ Example (IPv4):
 \end{itemize}
 
 \begin{itemize}
-	\item \textcolor{red}{What it does?} Enables interconnection in unmanaged or "router-less"local networks, but not in a general setting
+	\item \textcolor{red}{What it does?} Enables interconnection in unmanaged or "router-less" local networks, but not in a general setting
 \end{itemize}
 
 \begin{itemize}
@@ -337,7 +337,7 @@ Example (IPv4):
 \end{itemize}
 
 
-\section*{Stateless Address \textcolor{purple}{Auto}configuration (SLAACL) in IPv6}
+\section*{Stateless Address \textcolor{purple}{Auto}configuration (SLAAC) in IPv6}
 
 \textcolor{red}{Why} invented? To configure interfaces automatically without DHCP servers in IPv6
 
@@ -365,7 +365,7 @@ Solution 1: \textcolor{blue}{temporary, random host suffix}
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{host-tracking}
+    \includegraphics[width=0.8\textwidth]{images/host-tracking}
     \label{fig:LABEL}
 \end{figure}
 
@@ -394,7 +394,7 @@ Solution 2: "\textcolor{blue}{Secure autoconf}" (RFC7217), not fully random but 
 	\item Router Advertisements (RFC 6106)
 	\begin{itemize}
 		\item Host accesses routers in the same LAN via \textcolor{blue}{multicasting} asking for DNS info
-	\item $2
+	\item Router returns the IP address of the DNS server to the host
 \end{itemize}
 	
 \end{itemize}
@@ -415,7 +415,7 @@ E.g. 2004:aaaa:bbbb:cc01/64 is excluded from the delegated prefix 2004:aaaa:bbbb
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{dhcp-prefix-del}
+    \includegraphics[width=0.8\textwidth]{images/dhcp-prefix-del}
     \label{fig:LABEL}
 \end{figure}
 
@@ -489,7 +489,7 @@ Yes, but they cannot belong to the same subnet. We use a different subnet at eac
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{ip-header}
+    \includegraphics[width=0.6\textwidth]{images/ip-header}
     \label{fig:LABEL}
 \end{figure}
 
