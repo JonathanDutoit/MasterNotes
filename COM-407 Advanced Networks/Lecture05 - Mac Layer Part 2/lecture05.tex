@@ -64,7 +64,7 @@ Today, Ethernet is based on:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{switches}
+    \includegraphics[width=0.7\textwidth]{images/switches}
     \label{fig:LABEL}
 \end{figure}
 
@@ -79,7 +79,7 @@ But, since we can't get collisions, \textcolor{blue}{CSMA/CD is disabled} by def
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{same-protocol}
+    \includegraphics[width=0.8\textwidth]{images/same-protocol}
     \label{fig:LABEL}
 \end{figure}
 
@@ -91,7 +91,12 @@ But, since we can't get collisions, \textcolor{blue}{CSMA/CD is disabled} by def
   left=4mm, right=4mm, top=2mm, bottom=2mm % padding
 ]
 \textbf{How many frames can be transmitted in parallel in this switched Ethernet LAN (all boxes are switches)?}
-
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/switches-question}
+    \label{fig:LABEL}
+\end{figure}
 \vspace{0.3cm}
 
 A. 1 \\
@@ -124,7 +129,7 @@ E. I don't know \\
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{forwarding-algo}
+    \includegraphics[width=0.7\textwidth]{images/forwarding-algo}
     \label{fig:LABEL}
 \end{figure}
 
@@ -162,7 +167,7 @@ It does not work if there are \textcolor{red}{loops} in the topology
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{learning-connection}
+    \includegraphics[width=0.7\textwidth]{images/learning-connection}
     \label{fig:LABEL}
 \end{figure}
 
@@ -201,7 +206,7 @@ The switches:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{stp-2}
+    \includegraphics[width=0.5\textwidth]{images/stp-2}
     \label{fig:LABEL}
 \end{figure}
 
@@ -233,7 +238,7 @@ The switches:
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{spanning-tree-question}
+    \includegraphics[width=0.5\textwidth]{images/spanning-tree-question}
     \label{fig:LABEL}
 \end{figure}
 \vspace{0.3cm}
@@ -264,7 +269,7 @@ E. I don't know \\
 \hfill
 \begin{minipage}{0.5\textwidth}
 \centering
-\includegraphics[width=\linewidth]{stp-3}
+\includegraphics[width=\linewidth]{images/stp-3}
 \end{minipage}
 
 \section*{3. Ethernet Frame format}
@@ -282,7 +287,7 @@ E. I don't know \\
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{frame2}
+    \includegraphics[width=0.9\textwidth]{images/frame2}
     \label{fig:LABEL}
 \end{figure}
 
@@ -335,7 +340,7 @@ Frames have to be at least 64B (to see why, refer to minimum frame size) and at 
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{mac-unicast}
+    \includegraphics[width=0.8\textwidth]{images/mac-unicast}
     \label{fig:LABEL}
 \end{figure}
 
@@ -355,7 +360,7 @@ The data is transmitted in Ethernet, with the least significant bit of first oct
 		% Quick centered image
 		\begin{figure}[H]
 		    \centering
-		    \includegraphics[width=0.5\textwidth]{broadcast-1}
+		    \includegraphics[width=0.5\textwidth]{images/broadcast-1}
 		    \label{fig:LABEL}
 		\end{figure}
 	\end{center}
@@ -364,7 +369,7 @@ The data is transmitted in Ethernet, with the least significant bit of first oct
 			% Quick centered image
 			\begin{figure}[H]
 			    \centering
-			    \includegraphics[width=0.5\textwidth]{broadcast-2}
+			    \includegraphics[width=0.5\textwidth]{images/broadcast-2}
 			    \label{fig:LABEL}
 			\end{figure}
 		\end{center}
@@ -381,7 +386,7 @@ The data is transmitted in Ethernet, with the least significant bit of first oct
 			% Quick centered image
 			\begin{figure}[H]
 			    \centering
-			    \includegraphics[width=0.5\textwidth]{multicast-1}
+			    \includegraphics[width=0.5\textwidth]{images/multicast-1}
 			    \label{fig:LABEL}
 			\end{figure}
 		\end{itemize}
@@ -393,7 +398,7 @@ The data is transmitted in Ethernet, with the least significant bit of first oct
 			% Quick centered image
 			\begin{figure}[H]
 			    \centering
-			    \includegraphics[width=0.5\textwidth]{multicast-2}
+			    \includegraphics[width=0.5\textwidth]{images/multicast-2}
 			    \label{fig:LABEL}
 			\end{figure}
 		\end{itemize}
@@ -451,10 +456,179 @@ One \textcolor{red}{exception}: "smart" switches are cheating -- they build mult
 
 \textcolor{red}{Why invented?}
 \begin{itemize}
-	\item $1
-	\item $2
-	\item $3
+	\item Lack of traffic isolation $\rightarrow$ we want to limit the scope of broadcast traffic and have access control
+	\item Inefficient use of switches $\rightarrow$ we do not want to buy extra switches if other have available ports
+	\item Managing users $\rightarrow$ if a user moves, we do not want to also change its physical cabling
+\end{itemize}
+\textcolor{red}{\textit{Goal:}} Decouple who belongs to which LAN from their physical location
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/vlan}
+    \label{fig:LABEL}
+\end{figure}
+
+\begin{itemize}
+	\item VLANs operate as if they were physically separate:
+		\begin{itemize}
+			\item different forwarding tables, different spanning trees
+		\end{itemize}
+	\item \textcolor{red}{\textit{How}} does it work?
+		\begin{itemize}
+			\item network manager configures which switch port belongs to which VLAN
+			\item switch treats ports of different VLANs as separate, non communicating LANs
+			\item If more than one switches implement the same VLANs, they are interconnected via \textcolor{blue}{\textit{trunk}} ports, which use VLAN tags in an Ethernet's \textcolor{blue}{\textit{extender header}}, in order to correctly associate frames with VLANs. 
+		\end{itemize}
 \end{itemize}
 
+\textbf{Example of a trunk port}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/trunk-port}
+    \label{fig:LABEL}
+\end{figure}
+
+\begin{itemize}
+	\item The switches implement 2 virtual LANs
+		\begin{itemize}
+			\item the Electrical Engineering LAN in light blue and
+			\item the Computer Science LAN in a blue color
+		\end{itemize}
+	\item The switches are interconnected via trunk ports (16 and 1) that belong to both LANS
+	\item The trunk ports use VLAN tags to notify each other which arriving frame belongs to which VLAN
+\end{itemize}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{A has an IP packet destined to C; S1 is a switch; what should A do?}
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/vlan-question}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.3cm}
+A. Send an ARP request in order to obtain the MAC address of C, then send the packet to that MAC address. \\
+B. Send an ARP request in order to obtain both the MAC address and the VLAN label of C, then send the packet to this MAC address and to this VLAN \\
+C. None of the above \\
+D. I don't know \\
+
+\textbf{Answer}: C. VLANs 2 and 3 are two \textit{\textcolor{red}{separate}} LANs, it is not possible for A to send directly to C - it must go through a router. 
+\end{tcolorbox}
+
+
+\section*{5. Bridges}
+
+\textit{\textcolor{blue}{layer-2 devices}} that interconnected different medium-access technologies (e.g., WiFi with Ethernet) without routers
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/bridge}
+    \label{fig:LABEL}
+\end{figure}
+
+\newpage
+\section*{WiFi Access Point (a typical bridge)}
+
+\begin{itemize}
+	\item Combines:
+		\begin{itemize}
+			\item a WiFi base station (implements the WiFi MAC protocol)
+			\item a switch with an Ethernet backend (called the \textcolor{red}{Distribution System})
+		\end{itemize}
+	\item WiFi frames differ from Ethernet frames; they include \textit{\textcolor{blue}{3 MAC addresses}} source, dest and access-point
+\end{itemize}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/wifi}
+    \label{fig:LABEL}
+\end{figure}
+
+\section*{WiFi Access Point with Wireless Distribution System}
+
+\begin{itemize}
+	\item WiFi backend instead of Ethernet:
+		\begin{itemize}
+			\item WiFi base stations are interconnected via WiFi relays, which act as switches
+		\end{itemize}
+	\item WiFi frames include $\leq$ \textcolor{blue}{\textit{MAC addresses}} source, dest, transmitter/receiver delays
+\end{itemize}
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/wifi-wireless}
+    \label{fig:LABEL}
+\end{figure}
+
+\begin{minipage}{0.5\textwidth}
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Web server send one IP packet to Elaine. At (1), the MAC destination address is...}
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/elaine-1}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.3cm}
+A. M1 \\
+B. M2 \\ 
+C. M3 \\
+D. M4 \\
+E. I don't know \\
+
+\textbf{Answer}: M4
+\end{tcolorbox}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Web server sends one IP packet to Elaine. At (1), the MAC destination address is...}
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/elaine-2}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.3cm}
+A. M1 \\
+B. M2 \\
+C. M4 \\
+D. I don't know \\
+
+\textbf{Answer}: M4
+\end{tcolorbox}
+\end{minipage}
+
+\textcolor{blue}{Which topology is more efficient? Which one uses resources better?}
+
+\textbf{Answer:} the one without the bridge. 
+
+In the first case, the WiFi base station is not connected to a wired infrastructure and it acts as a Wifi \textcolor{blue}{\textit{range extender}}. Instead, it is connected wirelessly to a bridge. This is not very efficient because all WiFi traffic that goes to the bridge uses WiFi twice, once to access the base station, once to go from base station to the bridge. 
+
+The second case is the typical use of an \textcolor{red}{\textit{access point}}. The base station contains a bridge and is itself connected by Ethernet to the rest of the network.
 \end{document}
 
