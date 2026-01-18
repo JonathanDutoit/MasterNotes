@@ -57,9 +57,13 @@
 
 \textbf{Possible attacks}: 
 \begin{itemize}
-	\item \textcolor{red}{Eavesdropping}
-	\item \textcolor{red}{Free riding}
-	\item \textcolor{red}{Impersonation}
+	\item \textcolor{red}{Eavesdropping}: overhear someone else's data = MAC payload
+	\item \textcolor{red}{Free riding}: inset a device into a network without authorization
+	\item \textcolor{red}{Impersonation}: send data with someone else's MAC address; replay attacks
+\end{itemize}
+
+\begin{itemize}
+	\item E.g.: Ethernet at home or EPFL - no authentication of MAC addresses. 
 \end{itemize}
 
 \section*{Solutions}
@@ -68,23 +72,23 @@
 	\item \textcolor{blue}{Access control}: requires uses to show \textcolor{red}{credentials} before allowing access to the network; 
 		\begin{itemize}
 			\item shared = user knows a password, same for all (e.g., WiFI WPA-Personal)
-			\item per-user = user has a personal password (e.g., WiFi WPA-Enterprise
- 			\item \textbf{prevents free riding}		
+			\item per-user = user has a personal password (e.g., WiFi WPA-Enterprise)
+ 			\item $\rightarrow$ \textbf{prevents free riding}		
 		\end{itemize}
 	\item \textcolor{blue}{Authenticity}: we can use cryptography to \textcolor{red}{authenticate} src MAC address
 		\begin{itemize}
-			\item \textbf{prevents impersonation}, easier if access control is per use
+			\item $\rightarrow$ \textbf{prevents impersonation}, easier if access control is per use
 		\end{itemize}
 	\item \textcolor{blue}{Confidentiality}: we can use cryptography to \textcolor{red}{encrypt} MAC frame payloads (but not MAC addresses)
 		\begin{itemize}
-			\item \textbf{prevents eavesdropping}
+			\item $\rightarrow$ \textbf{prevents eavesdropping}
 		\end{itemize}
 \end{itemize}
 
 At home: 
 \begin{itemize}
 	\item WiFi WPA-Personal provides access control but does not authenticate individual users
-	\item Impersonation is possible by whoever knows the shared WiFI password
+	\item Impersonation is possible by whoever knows the shared WiFi password
 \end{itemize}
 
 EPFL:
@@ -109,12 +113,64 @@ iv. If host is accepted, frames between host and BS/Switch are \textcolor{blue}{
 	\item encryption covers MAC payload
 \end{itemize}
 
-\section*{Conclusion }
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+Bart, an EPFL student, connects his PC to EPFL WiFi, which user per-user access control, authentication and encryption. Bart configures his PC to be a \textit{\textcolor{red}{bridge}} between Ethernet and WiFi and allows LIsa, who is not allowed to access EPFL, to connect to his Ethernet port. Will Lisa be able to connect to the Internet in this way?
+
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/lisa-bart}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.3cm}
+
+A. Yes, provided that Lisa can configure an IP address on the same subnet as Bart \\
+B. Yes, it will work in all cases \\
+C. No, it will not work in any case \\ 
+D. I don't know \\ 
+
+\textbf{Answer}: C. Lisa appears to the WiFi base station with her source MAC address. So, when trying to verify the authenticity of Lisa's frames, the base station will see this mismatch, and it will discard the frames.
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+Bart, an EPFL student, connects his PC to EPFL WiFi, which users per-use access control, authentication and encryption. Bart configures his PC to be a \textbf{\textcolor{red}{\textit{NAT}}} between Ethernet and WiFi and allows Lisa, who is not allowed to access EPFL, to connect to his port. Will Lisa be able to connect to the Internet in this way?
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/lisa-bart}
+    \label{fig:LABEL}
+\end{figure}
+\vspace{0.3cm}
+A. Yes, unless Bart himself is behind a NAT \\
+B. Yes \\
+C. No, it will not work in any case \\
+D. I don't know \\
+
+\textbf{Answer}: B. There are 2 layer-2 domains separated by the NAT, which is layer-3 device. The WiFi frames seen by the WiFi base station belong to the WiFi domain i.e. they are seen as originated by Bart (i.e. their source MAC is Bart’s MAC address); hence, they are accepted as legitimate. Lisa can access the campus network without being a legitimate user !
+\end{tcolorbox}
+\section*{Conclusion}
 \begin{itemize}
-	\item The MAC layer fro wireless medium (WiFI) \\
+	\item The MAC layer for wireless medium (WiFI) \\
 	takes care of \textbf{sharing} the radio waves in a local environment
 	\item The MAC layer for wired medium (Ethernet) \\
-	\item $3
+	was originally designed for \textit{\textbf{sharing a cable;}} \\
+	so it used a protocol, called CSMA/CD very similar to WiFi.
+	\item Now, the MAC layer for wired medium (Ethernet) \\
+	does not need any such protocol, \\
+	because it uses \textit{\textbf{full-duplex cables}} and \textit{\textbf{interconnected switches}}. \\
+	$\rightarrow$ hence, it forms an \textcolor{blue}{\textit{interconnection layer of local scope.}}
 \end{itemize}
 
 We saw \textcolor{blue}{2 mechanisms to interconnect} devices:
@@ -149,7 +205,7 @@ What are the differences?
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{transport-layer}
+    \includegraphics[width=0.8\textwidth]{images/transport-layer}
     \label{fig:LABEL}
 \end{figure}
 
@@ -227,7 +283,7 @@ Formally, a server is a role at the transport layer, where the program waits for
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{ports}
+    \includegraphics[width=1\textwidth]{images/ports}
     \label{fig:LABEL}
 \end{figure}
 
@@ -247,6 +303,13 @@ Formally, a server is a role at the transport layer, where the program waits for
 		\end{itemize}
 \end{itemize}
 
+% Quick centered image
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/udp-datagram}
+    \label{fig:LABEL}
+\end{figure}
+
 \section*{How is UDP implement in practice?}
 
 Via \textcolor{red}{sockets} = programming interfaces
@@ -257,7 +320,7 @@ Via \textcolor{red}{sockets} = programming interfaces
  	\item \verb|socket(socket.AF_INET, ...)| resp. \verb|socket(socket.AF_INET6, ...)| creates and IPv4 (resp. IPv6) socket, returns an ID (= file descriptor)
 	\item bind() associates an IP address + port number with a socket, can be skipped for the client
 		\begin{itemize}
-			\item \textcolor{blue}{Port = 0} $Rightarrow$ any available port
+			\item \textcolor{blue}{Port = 0} $\rightarrow$ any available port
 			\item  \textcolor{blue}{IP address = 0} $\Rightarrow$ all host's IP addresses
 		\end{itemize}
 	\item sendto() specifies: dest IP addresses, dest port number, and the message to send
@@ -267,13 +330,13 @@ Via \textcolor{red}{sockets} = programming interfaces
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{sockets}
+    \includegraphics[width=0.5\textwidth]{images/sockets}
     \label{fig:LABEL}
 \end{figure}
-
+\newpage
 \section*{What socket to open? IPv4 or IPv6?}
 \begin{itemize}
-	\item Transport layer is not affected by the choice of IP (no UDPv6, not TCPv6)
+	\item Transport layer is not affected by the choice of IP (no UDPv6, nor TCPv6)
 	\item But, an application must choose IPv4 or IPv6, or better support both
 \end{itemize}
 
@@ -293,7 +356,7 @@ Via \textcolor{red}{sockets} = programming interfaces
 		% Quick centered image
 		\begin{figure}[H]
 		    \centering
-		    \includegraphics[width=0.8\textwidth]{ipv6-dual-stack}
+		    \includegraphics[width=0.8\textwidth]{images/ipv6-dual-stack}
 		    \label{fig:LABEL}
 		\end{figure}
 	\end{itemize}
@@ -306,16 +369,17 @@ Via \textcolor{red}{sockets} = programming interfaces
 		\end{itemize}
 \end{itemize}
 
+\newpage
 \section*{How does the Operating System view UDP?}
 
 UDP datagrams are delivered to sockets based on \textcolor{blue}{\textit{dest IP address}} and \textcolor{blue}{\textit{port number}}.
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{os-udp}
+    \includegraphics[width=0.8\textwidth]{images/os-udp}
     \label{fig:LABEL}
 \end{figure}
-\textbf{Note}: buffers can overflow! Receiver buffer is needed to assemble messages, sender buffer is necessary for congestion (for example WiFI carrier waits the channel to be free)
+\textbf{Note}: buffers can overflow! Receiver buffer is needed to assemble messages, sender buffer is necessary for congestion (for example WiFi carrier waits the channel to be free)
 
 \section*{With a dual-stack IPv6 socket?}
 
@@ -323,7 +387,7 @@ UDP datagrams are delivered to sockets based on \textcolor{blue}{\textit{dest IP
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{os-dual-stack}
+    \includegraphics[width=0.8\textwidth]{images/os-dual-stack}
     \label{fig:LABEL}
 \end{figure}
 
@@ -349,7 +413,7 @@ D. I don't know \\
 
 On the sending side: OS sends the UDP messages ASAP, but also uses a buffer to store data if interface is busy. OS may algo fragment the message if needed.
 
-On the receiving side: OS re-assembles IP fragments of UDP message (if needed) and keeps the message in received buffer ready to be read. The message is: 
+On the receiving side: OS re-assembles IP fragments of UDP message (if needed) and keeps the message in receive buffer ready to be read. The message is: 
 \begin{itemize}
 	\item "\textcolor{blue}{\textit{consumed}}" when application reads
 	\item or "\textcolor{blue}{\textit{dropped}}" because of an overflow event
@@ -392,7 +456,7 @@ A socket is bound to \textcolor{red}{a single port} and \textcolor{red}{one or m
 \hfill
 \begin{minipage}{0.7\textwidth}
 \centering
-\includegraphics[width=\linewidth]{tcp1}
+\includegraphics[width=\linewidth]{images/tcp1}
 \end{minipage}
 
 \subsection*{TCP Basic Operations 2: SACK and optimized segmentation (if possible)}
@@ -408,7 +472,7 @@ In addition to the ACK field, most TCP implementation also use the SACK field (\
 \hfill
 \begin{minipage}{0.7\textwidth}
 \centering
-\includegraphics[width=\linewidth]{tcp2}
+\includegraphics[width=\linewidth]{images/tcp2}
 \end{minipage}
 
 \subsection*{Receive Buffer}
@@ -423,7 +487,7 @@ TCP receiver uses a \textit{\textbf{receive buffer}} = \textcolor{red}{\textit{r
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{tcp3}
+    \includegraphics[width=0.9\textwidth]{images/tcp3}
     \label{fig:LABEL}
 \end{figure}
 
@@ -440,7 +504,7 @@ TCP receiver uses a \textit{\textbf{receive buffer}} = \textcolor{red}{\textit{r
 \hfill
 \begin{minipage}{0.3\textwidth}
 \centering
-\includegraphics[width=\linewidth]{tcp4}
+\includegraphics[width=\linewidth]{images/tcp4}
 \end{minipage}
 
 \subsection*{How does the sliding window work?}
@@ -457,7 +521,7 @@ TCP receiver uses a \textit{\textbf{receive buffer}} = \textcolor{red}{\textit{r
 \hfill
 \begin{minipage}{0.6\textwidth}
 \centering
-\includegraphics[width=\linewidth]{tcp5}
+\includegraphics[width=\linewidth]{images/tcp5}
 \end{minipage}
 
 \end{document}	
