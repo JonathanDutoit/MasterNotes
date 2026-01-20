@@ -73,7 +73,52 @@
 \end{center}
 
 \vspace{2cm}
+\begin{center}
+  {\LARGE \textbf{IP multicast (Continued)}}
+\end{center}
 
+\vspace{1cm}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{R is a backbone router used for multicast distribution. In which case must R keep per-flow information?}
+
+\vspace{0.3cm}
+
+A. IF R uses PIM-SM as multicast routing protocol \\
+B. IF R uses BIER as multicast routing protocol \\
+C. In both cases \\
+D. In neither case \\
+E. I don't know \\
+
+\textbf{Answer}: A. 
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{R is an \textit{ingress} edge router used for multicast distribution. In which case must R cache per-flow information?}
+
+\vspace{0.3cm}
+A. If R uses PIM-SM as multicast routing protocol \\
+B. If R uses BIER as multicast routing protocol \\ 
+C. In both cases \\
+D. In neither case \\
+E. I don't know \\
+
+\textbf{Answer}: C. \\
+With PIM-SM, all routers keep per-flow information. With BIER, only ingress routers need to \textit{\textcolor{red}{cache}} per-flow information.
+\end{tcolorbox}
+\newpage
 \begin{center}
   {\LARGE \textbf{Routing Algorithms}}
 \end{center}
@@ -114,7 +159,7 @@ A router has 2 functions:
 
 \textcolor{red}{How they differ?}
 
-\textbf{\textit{Optimization objective of the algorithm}}
+\textcolor{red}{\textit{Nature of the "best" path}} - \textbf{\textit{Optimization objective of the algorithm}}
 \begin{itemize}
 	\item To use least-cost path
 	\item To use equal-cost multi-path
@@ -122,13 +167,13 @@ A router has 2 functions:
 	\item Arbitrary (min delay, low bandwidth usage...)
 \end{itemize}
 
-\textbf{\textit{The underlying network, topology available?}}
+\textcolor{red}{\textit{Scope of network}} - \textbf{\textit{What is the  underlying network? Is topology info available?}}
 \begin{itemize}
 	\item Single domain $\Rightarrow$ \textcolor{blue}{infra-domain} routing (main alg. is OSPF)
 	\item Multiple domains $\Rightarrow$ \textcolor{blue}{inter-domain} routing (main alg. is BGP)
 \end{itemize}
 
-\textbf{\textit{Where is the output stored?}}
+\textcolor{red}{\textit{State location}} - \textbf{\textit{Where is the output stored?}}
 \begin{itemize}
 	\item Inside a local forwarding table
 	\item Directly into the packet headers
@@ -167,7 +212,7 @@ Finally: it determines next hops and populates its forwarding table.
 \hfill
 \begin{minipage}{0.7\textwidth}
 \centering
-\includegraphics[width=\linewidth]{distance-vector}
+\includegraphics[width=\linewidth]{images/distance-vector}
 \end{minipage}
 
 
@@ -183,16 +228,14 @@ This is suitable for \textcolor{blue}{\textit{inter-domain routing}}, because it
 	\item Each router selects best path according to \textit{multiple criteria}
 \end{itemize}
 
-\newpage
-
+\textcolor{red}{\textit{Source Routing "Strict"}}
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{source-routing-strict}
+    \includegraphics[width=0.8\textwidth]{images/source-routing-strict}
     \label{fig:LABEL}
 \end{figure}
 
-\textcolor{red}{\textit{Source Routing "Strict"}}
 
 \begin{itemize}
 	\item Source puts explicit paths \textcolor{blue}{\textit{into packet headers}} (path = sequence of intermediate hops)
@@ -204,7 +247,7 @@ This is suitable for \textcolor{blue}{\textit{inter-domain routing}}, because it
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{source-routing-loose}
+    \includegraphics[width=0.8\textwidth]{images/source-routing-loose}
     \label{fig:LABEL}
 \end{figure}
 
@@ -220,8 +263,6 @@ This is suitable for \textcolor{blue}{\textit{inter-domain routing}}, because it
 	\item Generalizes loose source routing by allowing the routing header to contain processing instructions for the intermediate hop: e.g., we can ask R4 to apply a security \textcolor{blue}{\textit{function}} (screening, traffic separation)
 	\item Used in data centers
 \end{itemize}
-
-\newpage
 
 \section*{2. OSPF (for a single area)}
 
@@ -258,7 +299,7 @@ Once synchronized, a router sends and accepts \textcolor{red}{\textit{link state
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{interface-databases}
+    \includegraphics[width=0.9\textwidth]{images/interface-databases}
     \label{fig:LABEL}
 \end{figure}
 
@@ -267,7 +308,7 @@ Once synchronized, a router sends and accepts \textcolor{red}{\textit{link state
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{routers-flood}
+    \includegraphics[width=1\textwidth]{images/routers-flood}
     \label{fig:LABEL}
 \end{figure}
 
@@ -280,7 +321,7 @@ Once synchronized, a router sends and accepts \textcolor{red}{\textit{link state
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{after-flooding}
+    \includegraphics[width=1\textwidth]{images/after-flooding}
     \label{fig:LABEL}
 \end{figure}
 
@@ -294,7 +335,7 @@ Once synchronized, a router sends and accepts \textcolor{red}{\textit{link state
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{new-router}
+    \includegraphics[width=1\textwidth]{images/new-router}
     \label{fig:LABEL}
 \end{figure}
 
@@ -309,7 +350,7 @@ Once synchronized, a router sends and accepts \textcolor{red}{\textit{link state
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{topology-graph}
+    \includegraphics[width=1\textwidth]{images/topology-graph}
     \label{fig:LABEL}
 \end{figure}
 
@@ -369,7 +410,7 @@ Router A keeps in its forwarding table only the \textcolor{blue}{\textit{next-ho
 % Quick centered image
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{shortest-paths}
+    \includegraphics[width=0.8\textwidth]{images/shortest-paths}
     \label{fig:LABEL}
 \end{figure}
 
@@ -412,7 +453,5 @@ E. I don't know \\
 However, this may cause \textcolor{red}{\textit{packet re-ordering}} $\Rightarrow$ alternative approach: \textcolor{blue}{\textit{per-flow load balancing}} requires that packets of the same flow to be sent to the same next-hop. 
 
 \vspace{0.3cm}
-
-Text
 \end{tcolorbox}
 \end{document}
