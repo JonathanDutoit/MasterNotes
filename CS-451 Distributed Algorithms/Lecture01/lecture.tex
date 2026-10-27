@@ -1,0 +1,188 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{parskip} % Better paragraph spacing
+\usepackage{titlesec} % Better section formatting
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\usepackage{lmodern}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Define code styling
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Define commands for reusable content
+\newcommand{\coursename}{CS-451 Distributed Algorithms}
+\newcommand{\lecturenum}{01}
+\newcommand{\lecturedate}{07/09/2026}
+\newcommand{\professor}{Rachid Guerraoui}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+% Configure section spacing
+\titlespacing*{\section}{0pt}{2ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.5ex plus 1ex minus .2ex}{1ex plus .2ex}
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\coursename}
+\fancyhead[R]{Lecture \lecturenum}
+\fancyfoot[L]{EPFL - Computer Science}
+\fancyfoot[C]{Author: Jonathan Dutoit}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+
+\begin{document}
+
+\begin{center}
+  {\large EPFL - Computer Science} \\[0.5em]
+  {\Large \textbf{\coursename}} \\[0.5em]
+  {\large Lecture \lecturenum\ --- \lecturedate} \\[0.5em]
+  {\large Author: Jonathan Dutoit} \\[0.5em]
+  {\large Professor: \professor} \\[0.5em]
+\end{center}
+
+\vspace{2cm}
+
+\begin{center}
+	{\LARGE \textbf{Overview}}
+\end{center}
+\vspace{0.5cm}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A \textbf{Distributed system} is a set of processes (machines), which are Turing machines, that communicate through shared messages.  
+
+\end{tcolorbox}
+\textbf{Ex.:} Google. Hundreds of thousands of machines connected. One job can involve 2000 machines, and on average 10 machines go down per day. 
+
+The application needs underlying services for distributed interaction. The network \textcolor{red}{is not enough}. Reliability guarantees (e.g., TCP) are only offered for communication among pairs of processes, i.e., \textit{one-to-one communication (client-server)}.
+
+\subsection*{Underlying services}
+\begin{enumerate}
+	\item \textbf{\textit{processes}} (abstracting computers)
+	\item \textbf{\textit{channels}} (abstracting networks)
+	\item \textbf{\textit{failure detectors}} (abstracting time)
+\end{enumerate}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} Processes. The distributed system is made of a finite set of \textit{\textbf{processes}}: each process models a \textbf{\textit{sequential}} program.
+\[
+	\text{Processes are denoted} \quad  p_1, ..., p_N \quad \text{or \textit{p}, \textit{q}, \textit{r}}
+.\] 
+
+Processes have unique \textbf{\textit{identities}} and know each other. Every pair of processes is connected by a \textbf{\textit{link}} through which the processes exchanges \textbf{\textit{messages}}. \\
+
+Every process has a \textbf{\textit{piece}} of the distributed algorithm. Modules within the same process interact by exchanging events.\\
+
+\textbf{\textit{Event based programming}}:
+\begin{lstlisting}[language=Octave]
+upon event < Event1, att1, att2, ...> do 
+	// something
+	trigger < Event2, att1, att2, ...>
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} \textbf{\textit{Safety}} is a property which states that nothing bad should happen. \textbf{\textit{Liveness}} is a property which states that something good should happen. \\
+
+\textbf{Example}: \textit{Tell the truth}
+\begin{itemize}
+	\item Having to say something is \textit{liveness}
+	\item Not lying is \textit{safety}
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Fair-loss links}
+\begin{itemize}
+	\item \textbf{\textit{FL1. Fair-loss}}. If a message is sent infinitely often by pi to pj, and neither pi or pj crashes, them m is delivered infinitely often by pj $\Rightarrow$ \textcolor{blue}{liveness}.
+	\item \textit{\textbf{FL2. Finite duplication}}. If a message m is sent a finite number of times by pi to pj, m is delivered a finite number of times by pj. $\Rightarrow$ \textcolor{blue}{liveness}. 
+	\item \textbf{\textit{FL3. No creation}}. No message is delivered unless it was sent. $\Rightarrow$ \textcolor{blue}{safety}.
+\end{itemize}
+
+\subsection*{Stubborn links}
+\begin{itemize}
+	\item \textbf{\textit{SL1. Stubborn delivery}}. If a process pi sends a message m to a correct process pj, and pi does not crash, then pj delivers m an infinite number of times.
+	\item \textbf{\textit{SL2. No creation}}. No message is delivered unless it was sent. 
+\end{itemize}
+
+\textbf{Implements:} SturbbornLinks (sp2p). \\
+\textbf{Uses:} FairLossLinks (flp2p).
+\begin{lstlisting}[language=Octave]
+upon event <sp2pSend, dest, m> do
+	while (true) do
+		trigger <flp2pSend, dest, m>; 
+	upon event <flp2pDeliver, src, m> do
+		trigger (sp2pDeliver, src, m>;
+\end{lstlisting}
+
+\textbf{Note:} by the underlying link (fair-loss links), we know that if we send a message an infinite number of times, then the message is delivered infinitely. For delivering, the message comes first from the underlying link (fair-loss), and then it's transferred to the upper link (stubborn). 
+
+\subsection*{Reliable (Perfect) links}
+
+\begin{itemize}
+	\item \textbf{\textit{PL1. Validity}}. If pi and pj are correct, then every message sent by pi to pj is eventually delivered by pj. 
+	\item \textbf{\textit{PL2. No duplication}}. No message is delivered (to a process) more than once.
+	\item \textbf{\textit{PL3. No creation}}. No message is delivered unless it was sent. 
+\end{itemize}
+\textbf{Implements}: PerfectLinks (pp2p) \\
+\textbf{Uses}: StubbornLinks (sp2p).
+\begin{lstlisting}[language=Octave, mathescape=true]
+upon event < Init> do delivered := $\varnothing$
+upon event < pp2pSend, dest, m>; 
+	trigger < sp2pSend, dest, m>; 
+upon event < sp2pDeliver, src, m> do
+	if m $\notin$ delivered then
+		trigger < pp2pDeliver, src, m>;
+		add m to delivered;
+\end{lstlisting}
+
+Roughly speaking, reliable links ensure that messages exchanged between correct processes are \textbf{\textit{not lost}}.
+\end{document}
