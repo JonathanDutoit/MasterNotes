@@ -1,0 +1,488 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{parskip} % Better paragraph spacing
+\usepackage{titlesec} % Better section formatting
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\usepackage{lmodern}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Define code styling
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Define commands for reusable content
+\newcommand{\coursename}{CS-550 Formal Verification}
+\newcommand{\lecturenum}{04}
+\newcommand{\lecturedate}{\today}
+\newcommand{\professor}{Viktor Kuncak}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+% Configure section spacing
+\titlespacing*{\section}{0pt}{2ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.5ex plus 1ex minus .2ex}{1ex plus .2ex}
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\coursename}
+\fancyhead[R]{Lecture \lecturenum}
+\fancyfoot[L]{EPFL - Computer Science}
+\fancyfoot[C]{Author: Jonathan Dutoit}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+
+\begin{document}
+
+\begin{center}
+  {\large EPFL - Computer Science} \\[0.5em]
+  {\Large \textbf{\coursename}} \\[0.5em]
+  {\large Lecture \lecturenum\ --- \lecturedate} \\[0.5em]
+  {\large Author: Jonathan Dutoit} \\[0.5em]
+  {\large Professor: \professor} \\[0.5em]
+\end{center}
+
+\vspace{1.0cm}
+\begin{center}
+  {\LARGE \textbf{Automating First-Order Logic Profs Using Resolution}}
+\end{center}
+\vspace{1cm}
+First-order logic formula:
+\[
+	\begin{align*}
+		[(\forall x. \exists y. R(x, y)) \, \land \\ 
+		(\forall x. \forall y. (R(x, y) \to \forall z. R(x, f(y, z)))) \, \land \\
+		(\forall x. (P(x) \lor P(f(x, a))))] \\
+		\to \forall x .\exists y. (R(x, y) \land P(y)) 
+	\end{align*}
+\] 	
+
+First-order logic supports arbitrary (uninterpreted) predicates and functions. Their meaning will be constrained through axioms. Note that it contains: 
+\begin{itemize}
+	\item propositional operations $\land, \lor, \neg, \to$
+	\item variables \textit{x, y}
+	\item function symbols and constants: \textit{f, a}
+	\item predicate symbols: \textit{P, R}
+	\item quantifier $\forall, \exists$ (only over variables, not function or predicate symbols - FO) 
+\end{itemize}
+
+FOL can be used in practice for formalize most of mathematics (e.g., through set theory axioms), and thus all of \underline{\textbf{program verification problems}}. To prove whether a property holds, we can proceed as follows: 
+\begin{enumerate}
+	\item Describe the property using a formula \textit{F}
+	\item Describe the functions and relations in \textit{F} using a sequence of axioms \textit{S}
+	\item Check if the sequence $(\neg F; S)$ is contradictory. If yes, then \textit{F} follows from \textit{S}. 
+\end{enumerate}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A first-order \textit{signature} $\mathcal{L}$ specifies a countable set of function symbols \textit{f} (constants \textit{c} are functions symbols taking no arguments), and predicate symbols \textit{p}. Syntax of formulas \textit{(F)} and terms \textit{(t)} in first-order logic: $$ F ::= p(t_1, ..., t_n) \, | \, \forall x. F \, | \, \exists x. F \, | \, \top \, | \, \bot \, | \, \neg F \, | \, F_1 \land F_2 \, | \, F_1 \lor F_2 \, | \, F_1 \to F_2 \, | F_1 \leftrightarrow F_2 $$ 
+$$t ::= x \, | \, c \, | \, f(t_1, ..., t_n)$$
+
+Where we assume that the set of variables $x \in $ \textit{Var}, predicate symbols \textit{p} and function symbols \textit{f} are all \textit{countably infinite} sets.  
+\end{tcolorbox}
+
+\textbf{\textit{Arity}}: \textit{ar} denotes arity of functions and predicate symbols which defines how many arguments it takes. For instance, \textit{ar(f) = 2} means \textit{f} takes two arguments, so it is allowed to form a term $f(t_1, t_2)$, and also \textit{ar(p) = 2} for predicate symbol means that it is allowed to form formula $p(t_1, t_2)$. 
+
+We interpret each \textit{f} as $\bar{f} : D^{\text{ar(f)}} \to D$ and each \textit{p} as $\bar{p} : D^{\text{ar(p)}} \to \{0, 1\}$ (or: $\subseteq D^{\text{ar(p)}}$)
+\begin{itemize}
+	\item \textit{atomic formula}: $p(t_1, ..., t_n)$ (contains no logical connective or quantifier)
+	\item \textit{literal}: either an atomic formula, or its negation $\neg p(t_1, ..., t_n)$ 
+	\item \textit{clause}: a disjunction of literal, e.g., $\neg p(x, f(y)) \lor q(y) \lor \neg r(x, z)$
+\end{itemize}
+
+\textbf{Ex.:} signature $\mathcal{L} = \{P, R, a, f\}$ where
+\begin{itemize}
+	\item \textit{P} is a predicate symbol, \textit{ar(P) = 1}
+	\item \textit{R} is a predicate symbol, \textit{ar(R) = 2}
+	\item \textit{a} is a constant
+	\item \textit{f} is a function symbol, \textit{ar(f) = 2}
+\end{itemize}
+
+An \textbf{interpretation} for this language is any structure (\textit{D, e}) where: 
+\begin{itemize}
+	\item D $\neq \emptyset$ (\textit{D stands for domain}, it can be finite or infinite)
+	\item $e(P) : D \to \{0, 1\}
+	\item e(R): D^{2} \to \{0, 1\}
+	\item e(a) \in D
+	\item e(f) : D^{2} \to D$
+\end{itemize}
+
+Considering the following interpretation: 
+\begin{itemize}
+	\item $D = \{0, 1, 2...\}$ (non-negative integers)
+	\item $e(P)(n) = $ if $(2 \mid n)$ then 1 else 0
+	\item $e(R)(x,y) = $ if $(x \leq y)$ then 1 else 0
+	\item \textit{e(a) = 1}
+	\item $e(f)(x, y) = x + y$
+\end{itemize}
+
+We can then talk about the truth value of any closed formula, e.g.:
+\[
+	\begin{array}{l | l}
+		\text{text, or tree} & \text{true or false} \\ 
+				     &  \\
+		(\forall x. \exists y. R(x, y)) \, \land & (\forall x. \exists y. x \leq y) \\[1em]
+		(\forall x. \forall y. (R(x, y) \to \forall z. R(x, f(y, z)))) \, \land & (\forall x. \forall y. x \leq y \to \forall z. x \leq (y + z)) \, \land \\[1em]
+		(\forall x. (P(x) \lor P(f(x, a))))] & (\forall x. (2 \mid x) \lor (2 \mid x + 1))\\[1em]
+		\to \forall x .\exists y. (R(x, y) \land P(y))  & \to \forall x .\exists y. (x \leq y \land (2 \mid y)
+	\end{array}
+\] 
+
+\subsection*{Semantics in general: interpreter written in set theory}
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A first-order \textit{\underline{interpretation}} is \textit{I = (D, e)} where $D \neq \emptyset$ and \textit{e} maps constants, function and predicate symbols as follows: 
+\begin{itemize}
+	\item each predicate symbol \textit{p} with \textit{ar(p) = n} into $e(p) : D^{n} \to \{0, 1\}$
+	\item each function symbol \textit{f} with \textit{ar(f) = n} into a \underline{total function} of \textit{n} arguments, $e(f) : D^{n} \to D$ (and each constant \textit{c} into element of \textit{D}, i.e., \textit{e(c)} $\in D$)
+	\item maps each variable \textit{x} to element of \textit{D}, i.e., $e(x) \in D$ 
+\end{itemize}
+\end{tcolorbox}
+We then define $[\![F]\!]_I \in \{0, 1\}$ to denote whether \textit{F} is true (1) or false (0) in interpretation \textit{I}. The rules are the expected rules \textit{recursive} on the formula tree:  
+\[
+	\begin{center}
+		[\![ F_1 \land F_2 ]\!]_I = [\![ F_1 ]\!]_I \land [\![ F_2 ]\!]_I,
+\quad [\![ F_1 \lor F_2 ]\!]_I = [\![ F_1 ]\!]_I \lor [\![ F_2 ]\!]_I,
+\quad [\![ \neg F ]\!]_I = \neg [\![ F ]\!]_I,
+\quad [\![ \bot ]\!]_I = 0 \\[1em]
+[\![ f(t_1, \dots, t_n) ]\!]_I = e(f)([\![ t_1 ]\!]_I, \dots, [\![ t_n ]\!]_I),
+\quad [\![ p(t_1, \dots, t_n) ]\!]_I = e(p)([\![ t_1 ]\!]_I, \dots, [\![ t_n ]\!]_I),
+\quad [\![ x ]\!]_I = e(x) \\[1.2em]
+[\![\forall x. F]\!]_{(D,e)} = \text{if } (\forall d \in D. ([\![ F ]\!]_{(D,e[x := d])} = 1)) \text{ then 1 else 0} \\
+
+[\![\exists x. F ]\!]_{(D,e)} = \text{if } (\exists d \in D. ([\![ F ]\!]_{(D,e[x := d])} = 1)) \text{ then } 1 \text{ else } 0
+	\end{center}
+.\] 
+where $e[x := d](y)=$ (if $x = y$ then \textit{d} else \textit{e(y)})
+
+\textit{Note}: we \textit{cannot} write a FOL formula that quantifies over function and relation symbols (that would be \textit{second} or, generally, \textit{higher} order). 
+
+
+To make statements that \textit{do not depend} on a \underline{particular interpretation}, we use concepts of \textbf{satisfiability} and \textbf{validity}. Let's use the FOL formula $\forall x. \exists y. (p(x, y) \land q(y, x))$
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A formula \textit{F} is \textbf{satisfiable} if \textbf{there exists an interpretation} (\textit{D, e}) such that $[\![F]\!]_{(D, e)} = 1$. Which is equivalent to an informal statement: $$\exists \textbf{D} \neq \emptyset. \exists \bar{\textbf{p}}, \bar{\textbf{q}} : \textbf{D}^{2} \to \{0, 1\}. \forall x \in D. \exists y \in D. ((\bar{p}(x, y) \land \bar{q}(y, x)) = 1)$$
+
+The domain, functions, and relations are all \textit{existentially} quantified. 
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A formula \textit{F} is \textbf{valid} if \textbf{for all interpretations} (\textit{D, e}) (for arbitrarily small or large sets \textit{D} and all possible choices of \textit{e}), $[\![F]\!]_{D(e)}$ = 1. Which is equivalent a mathematical statement $$\forall \textbf{D} \neq \emptyset. \forall \bar{\textbf{p}}, \bar{\textbf{q}} : \textbf{D}^{2} \to \{0, 1\}. \forall x \in D. \exists y \in D. ((\bar{p}(x, y) \land \bar{q}(y, x)) = 1)$$
+
+The domain, functions. and relations are all \textit{universally} quantified. 
+\end{tcolorbox}
+
+\textbf{Observation}: \textit{F} is valid if and only if $\neg F$ is not satisfiable. We will be checking satisfiability (aiming for a negative answer). 
+
+\subsection*{Negation normal form for FOL}
+
+To check the validity of formula \textit{F}, we check the satisfiability of $\neg F$. In general, we will transform $\neg F$ into a \textit{normal form}. 
+
+\textbf{Observation} If $F \leftrightarrow G$ is a valid FOL formula, then inside any other FOL formula \textit{H} we can replace a sub-formula \textit{F} with \textit{G} without changing the truth value of the formula: $H[F] \rightsquigarrow H[G]$. 
+
+We can transform formulas to negation normal using transformations such as these: 
+\[
+\begin{align*}
+  F_1 \leftrightarrow F_2 &\mathrel{\rightsquigarrow} (F_1 \to F_2) \land (F_2 \to F_1) \\
+  F_1 \to F_2 &\mathrel{\rightsquigarrow} \neg F_1 \lor F_2 \\
+  \neg\neg F &\mathrel{\rightsquigarrow} F \\
+  \neg(F_1 \land F_2) &\mathrel{\rightsquigarrow} \neg F_1 \lor \neg F_2 \\
+  \neg(F_1 \lor F_2) &\mathrel{\rightsquigarrow} \neg F_1 \land \neg F_2 \\
+  \neg\forall x.F &\mathrel{\rightsquigarrow} \exists x.\neg F \\
+  \neg\exists x.F &\mathrel{\rightsquigarrow} \forall x.\neg F \\
+\end{align*}
+.\] 
+
+In NNF, negation applies only to atomic formulas (node leaves) and the only other propositional connective are $\land, \lor$. 
+
+\subsection*{Skolem function}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} \textit{Skolemization} replaces an existentially quantified variable ($\exists y$) with a function that chooses a suitable value for y. The function takes as arguments the variables that the choices depends on. 
+
+Suppose we have: $$\forall x \exists y p(x, y)$$ We don't know which \textit{y} works for each \textit{x}, so we introduce a new function \textit{s(x)} that chooses a suitable one. The formula becomes $$\boxed{\forall x p(x, s(x))}$$ Here, \textit{s} is called a \textbf{skolem function}. Skolemization \textbf{preserves satisfiability}, but it does not necessarily produce a logically equivalent formula. 
+\end{tcolorbox}
+
+A skolem function depends on the \textit{universally quantified variables} that appear before the existential quantifier. 
+\begin{itemize}
+	\item No preceding universal variables $\exists y p(y)$ $\to \boxed{p(c)}$ replace y with a constant \textit{c}.
+	\item Two preceding universal variables $\forall x \forall z \exists y p(x, z, y) \to \boxed{\forall x \forall z p(x, z, s(x, z))} $ replace \textit{y} with \textit{s(x, z)}
+	\item More than one quantifier $\forall x \exists y \forall z \exists w p(x, y, z, w)$, then we eliminate existential quantifiers \textbf{from left to right} $\to \forall x \forall z \exists w p(x, f(x), z, w) \to \boxed{\forall x \forall z p(x, f(x), z, g(x, z))}$ 
+\end{itemize}
+
+\subsection*{Example with FOL}
+
+\[
+	\begin{align*}
+		\neg \left(((\forall x. \exists y. R(x, y)) \, \land \quad \quad \textcolor{red}{\neg(a \to b) \rightsquigarrow a \land \neg b} \\ 
+		(\forall x. \forall y. (R(x, y) \to \forall z. R(x, f(y, z)))) \, \land \quad \quad \textcolor{red}{a \to b \rightsquigarrow \neg a \lor b}\\
+		(\forall x. (P(x) \lor P(f(x, a)))) \right) \\
+		\to \forall x .\exists y. (R(x, y) \land P(y)) 
+	\end{align*}
+\] 	
+since $\neg (a \to b) \leftrightarrow \neg(\neg a \lor b) \leftrightarrow a \land \neg b$, it becomes 
+
+\[
+	\begin{align*}
+		\left(((\forall x. \exists y. R(x, y)) \, \land \quad \quad \textcolor{red}{y \rightsquigarrow s_1(x)} \\
+		(\forall x. \forall y. (\neg R(x, y) \lor \forall z. R(x, f(y, z)))) \, \land \\
+		(\forall x. (P(x) \lor P(f(x, a)))) \right) \land \\
+		(\exists x .\forall y. (\neg R(x, y) \lor \neg P(y))) \quad \quad \textcolor{red}{x \rightsquigarrow s_2}
+	\end{align*}
+\] 	
+by skolemization it finally becomes: 
+\[
+	\begin{align*}
+		(\forall x.  R(x, s_1(x))) \, \land \\ 
+		(\forall x. \forall y. (\neg R(x, y) \lor \forall z. R(x, f(y, z)))) \, \land \\
+		(\forall x. (P(x) \lor P(f(x, a)))) \land \\
+		(\forall y. (\neg R(s_2, y) \lor \neg P(y))) 
+	\end{align*}
+\] 	
+
+The resulting formula only has \textit{universally quantified variables}. 
+
+\subsection*{Moving quantifiers and conjunctive normal form}
+
+Note that all bound quantified variables can be renamed while preserving equivalence, and that a quantifier can be pulled in or out of a formula where it does not occur:
+\begin{itemize}
+    \item $(\forall x. F) \leftrightarrow \forall y. F[x := y]$, where \textit{y} is fresh
+    \item $(\forall x. F) \lor G \leftrightarrow \forall x. (F \lor G)$
+    \item $(\forall x. F) \land G \leftrightarrow \forall x. (F \land G)$
+\end{itemize}
+
+We can thus pull quantifiers outwards. If we choose, we can obtain: \textbf{prenex normal form}, a formula of the form
+\[
+    Q_1 x_1. Q_2 x_2. \dots Q_n x_n. G
+\]
+where $Q_i \in \{\forall, \exists\}$ and \textit{G} has no quantifiers.
+
+We can then transform \textit{G} to \textbf{conjunctive normal form}, as for propositional logic:
+\[
+    (F \land G) \lor H \leftrightarrow (F \lor H) \land (G \lor H)
+\]
+We can also introduce \textit{fresh predicate symbols} to avoid exponential blowup.
+
+\subsection*{Conjunction of clauses}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Theorem.} Each formula \textit{F} can be transformed into an \textit{equisatisfiable} formula of the form:
+\[
+    (\forall x_1, \dots, x_n. C_1) \land \dots \land (\forall x_1, \dots, x_n. C_m)
+\]
+where each $C_i$ is quantifier-free and, moreover, a disjunction of first-order literals.
+\end{tcolorbox}
+
+\textbf{Note}: a first-order \textit{literal} is either an atomic formula, that is $p(t_1, \dots, t_k)$ where \textit{p} is a predicate symbol, or a negation of an atomic formula, $\neg p(t_1, \dots, t_k)$.
+
+Indeed, we have seen how to move $\neg$ to predicates (\textit{NNF}), eliminate $\exists$ (skolemization), and pull $\forall$ and $\land$ to the outside, leaving $\lor$ applied to literals. Each $C_i$ is a (first-order) \textbf{clause}. We can also view it as a \textit{set}, because the order of disjuncts does not matter up to equivalence. A clause that is an \textit{empty set} means $\bot$.
+
+For a given formula \textit{F}, denote the set of obtained clauses $\{C_1, \dots, C_m\}$ by $\mathrm{clauses}(F)$. We \textit{omit} universal quantifiers because all variables are universally quantified. We use a convention to denote variables by \textit{x, y, z, ...} and constants by \textit{a, b, c, ...}.
+
+\subsection*{Sets of formulas when checking satisfiability}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} A \textit{set} of formulas \textit{S} is \textit{true} in an interpretation \textit{I} if \textit{every} formula is true in that interpretation:
+\[
+    [\![S]\!]_I = \text{if } (\forall F \in S. [\![F]\!]_I = 1) \text{ then } 1 \text{ else } 0
+\]
+If \textit{S} is finite, then $[\![S]\!]_I = [\![ \bigwedge_{F \in S} F ]\!]_I$.
+
+We say two sets are \textit{equivalent} iff the sets of interpretations in which they are true are equal. We say that \textit{S} is \textit{satisfiable} iff there exists \textit{I} such that $[\![S]\!]_I = 1$.
+\end{tcolorbox}
+
+Thus, \textit{F} is satisfiable iff $\mathrm{clauses}(F)$ is satisfiable.
+
+\subsection*{Clauses for the example}
+
+The skolemized formula
+\[
+\begin{align*}
+    (\forall x. R(x, s_1(x))) \, \land \\
+    (\forall x. \forall y. (\neg R(x, y) \lor \forall z. R(x, f(y, z)))) \, \land \\
+    (\forall x. (P(x) \lor P(f(x, a)))) \, \land \\
+    (\forall y. (\neg R(s_2, y) \lor \neg P(y)))
+\end{align*}
+\]
+gives the set of clauses:
+\[
+\begin{array}{l}
+    R(x, s_1(x)), \\[0.5em]
+    \neg R(x, y) \lor R(x, f(y, z)), \\[0.5em]
+    P(x) \lor P(f(x, a)), \\[0.5em]
+    \neg R(s_2, y) \lor \neg P(y)
+\end{array}
+\]
+or, if we represent clauses themselves as sets:
+\[
+    \{R(x, s_1(x))\}, \quad \{\neg R(x, y), R(x, f(y, z))\}, \quad \{P(x), P(f(x, a))\}, \quad \{\neg R(s_2, y), \neg P(y)\}
+\]
+
+\subsection*{Applying sound inference rules}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} We say that an inference rule
+\[
+    \frac{F_1 \quad \dots \quad F_n}{G}
+\]
+is \textbf{sound} iff the formula $(F_1 \land \dots \land F_n) \to G$ is valid.
+\end{tcolorbox}
+
+\textbf{Observation.} Let $\frac{F_1 \quad \dots \quad F_n}{G}$ be a sound inference rule with $F_1, \dots, F_n \in S$. Then \textit{S} and $S \cup \{G\}$ are equivalent.
+
+\textbf{Ex.:} using the convention that variables are $\forall$-quantified, the \textit{instantiation} rule
+\[
+    \frac{C}{C[x := t]}
+\]
+is sound, where $C[x := t]$ denotes substituting variables of \textit{C} by some terms. In general, \textit{t} may contain other variables. Special cases of instantiation are:
+\begin{itemize}
+    \item \textit{renaming}: replace variables with fresh variables
+    \item \textit{ground instantiation}: replace variables with ground terms, that have no variables (built only from constants and function symbols)
+\end{itemize}
+
+\subsection*{Resolution for FOL clauses}
+
+The following formula (transitivity of universal implication) is easily proven to be \textit{valid} for all formulas \textit{F, G, H}, where \textit{x} denotes the finite list of all free variables in \textit{F, G, H}:
+\[
+    (\forall x. (F \to G)) \land (\forall x. (G \to H)) \to (\forall x. (F \to H))
+\]
+
+Write it down as an inference rule, assuming that all formulas are universally quantified:
+\[
+    \frac{F \to G \qquad G \to H}{F \to H}
+\]
+Expressing $\to$ using $\lor$ and $\neg$:
+\[
+    \frac{\neg F \lor G \qquad \neg G \lor H}{\neg F \lor H}
+\]
+Let \textit{G} be a literal \textit{L}, let $\neg F$ be equivalent to clause $C_1$ and \textit{H} to clause $C_2$. We get:
+\[
+    \frac{C_1 \lor L \qquad \neg L \lor C_2}{C_1 \lor C_2}
+\]
+\textbf{resolution} (simple, without unification)
+
+\subsection*{Resolution with instantiation}
+
+We call literals \textit{L} and $\neg L$ \textbf{complementary}.
+
+If literals are not complementary, we may still be able to apply the substitution rule to make them complementary:
+\[
+    \frac{C_1 \lor L \qquad \neg L \lor C_2}{C_1 \lor C_2}
+    \qquad \rightsquigarrow \qquad
+    \frac{C_1' \lor L' \qquad \neg L'' \lor C_2''}{C_1 \lor C_2}
+\]
+To check whether we can find a substitution to make $L'$ and $L''$ identical, we can use (syntactic, first-order) \textbf{unification}, which has a \textit{linear-time} algorithm.
+
+We rename variables in the two clauses so that they are disjoint, then instantiate them by computing the \textit{most general unifier}, so that literals become complementary (one is an atomic formula and the other its negation).
+
+\subsection*{Applying resolution}
+
+Apply resolution and instantiation to the clauses in our example:
+\[
+\begin{array}{lll}
+    1. & R(x, s_1(x)) & \\[0.5em]
+    2. & \neg R(x, y) \lor R(x, f(y, z)) & \\[0.5em]
+    3. & P(x) \lor P(f(x, a)) & \\[0.5em]
+    4. & \neg R(s_2, y) \lor \neg P(y) & \\[0.5em]
+    5. & (1,2): \; R(x, f(s_1(x), z)) & \quad \textcolor{red}{y \rightsquigarrow s_1(x)} \\[0.5em]
+    6. & (1,4): \; \neg P(s_1(s_2)) & \quad \textcolor{red}{x \rightsquigarrow s_2, \; y \rightsquigarrow s_1(x)} \\[0.5em]
+    7. & (3,6): \; P(f(s_1(s_2), a)) & \quad \textcolor{red}{x \rightsquigarrow s_1(s_2)} \\[0.5em]
+    8. & (4,7): \; \neg R(s_2, f(s_1(s_2), a)) & \quad \textcolor{red}{y \rightsquigarrow f(s_1(s_2), a)} \\[0.5em]
+    9. & (5,8): \; \bot & \quad \textcolor{red}{x \rightsquigarrow s_2, \; z \rightsquigarrow a}
+\end{array}
+\]
+
+We can derive $\bot$ from the set of clauses. Thus, the set of clauses is \textit{unsatisfiable}. The formula we started from as well.
+
+\subsection*{Conclusion of the procedure on this example}
+
+Thus, the formula before negation:
+\[
+\begin{align*}
+    &[(\forall x. \exists y. R(x, y)) \, \land \\
+    &(\forall x. \forall y. (R(x, y) \to \forall z. R(x, f(y, z)))) \, \land \\
+    &(\forall x. (P(x) \lor P(f(x, a))))] \\
+    &\to \forall x. \exists y. (R(x, y) \land P(y))
+\end{align*}
+\]
+was \textbf{valid}. We have proven that this formula holds in \textit{all possible models} (no matter how small, large, or complex they might be).
+
+Remarkably, \textit{resolution with instantiation} is \textbf{refutationally complete}: if the formula is valid, then from the clauses equisatisfiable to its negation we will find a contradiction.
+\end{document}
