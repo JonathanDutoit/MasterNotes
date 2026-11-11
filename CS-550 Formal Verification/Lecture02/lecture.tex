@@ -518,7 +518,7 @@ To get back a tree: substitute all auxiliary variables $c_i$, but we get much bi
 We represent sequential circuit as $C = (\bar{s}, \text{Init}, R, \bar{x}, \bar{a})$ where: 
 \begin{itemize}
 	\item $\bar{s} = (s_1, ..., s_n)$ is the vector of state variables
-	\item \textit{Init} is a boolean formula with \textit{FV(Init)} $\subseteq \{s_1, ..., s_n\}$i
+	\item \textit{Init} is a boolean formula with \textit{FV(Init)} $\subseteq \{s_1, ..., s_n\}$
 	\item $\bar{a} = (a_1, ..., a_m)$ is the vector of input variables
 	\item $\bar{x} = (x_1, ..., x_k)$ is the vector of auxiliary variables (for \textit{R})
 	\item \textit{R} is a boolean formula called transition formula, for which $$\text{FV(R)} \subseteq \{s_1, ..., s_n, a_1, ..., a_m, x_1, ..., x_k, s'_1, ..., s'_n\}$$
