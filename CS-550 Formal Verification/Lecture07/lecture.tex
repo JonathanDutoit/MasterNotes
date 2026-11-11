@@ -1,0 +1,283 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{parskip} % Better paragraph spacing
+\usepackage{titlesec} % Better section formatting
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\usepackage{lmodern}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Define code styling
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Define commands for reusable content
+\newcommand{\coursename}{CS-550 Formal Verification}
+\newcommand{\lecturenum}{07}
+\newcommand{\lecturedate}{\today}
+\newcommand{\professor}{Viktor Kuncak}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+% Configure section spacing
+\titlespacing*{\section}{0pt}{2ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{1.5ex plus 1ex minus .2ex}{1ex plus .2ex}
+% Header / Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\coursename}
+\fancyhead[R]{Lecture \lecturenum}
+\fancyfoot[L]{EPFL - Computer Science}
+\fancyfoot[C]{Author: Jonathan Dutoit}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+
+\begin{document}
+
+\begin{center}
+  {\large EPFL - Computer Science} \\[0.5em]
+  {\Large \textbf{\coursename}} \\[0.5em]
+  {\large Lecture \lecturenum\ --- \lecturedate} \\[0.5em]
+  {\large Author: Jonathan Dutoit} \\[0.5em]
+  {\large Professor: \professor} \\[0.5em]
+\end{center}
+
+\vspace{1.5cm}
+
+\begin{center}
+  {\LARGE \textbf{Quantifier Elimination for Presburger Arithmetic}}
+\end{center}
+
+\vspace{1cm}
+
+\section*{Formal Verification Methodology}
+
+Formal verification of program as a three-step approach: 
+\begin{enumerate}
+	\item Express properties in logic or code \\ 
+		(assertions, preconditions, post-conditions, invariants, run-time error conditions) 
+	\item Compile program meaning to \textbf{logical formulas}  \\
+	(verification-condition generator, symbolic execution)
+\item Develop and use an automated theorem prover for generated conditions \\
+	(SAT and SMT solving, resolution-based theorem proving, proof assistants)
+\end{enumerate}
+
+Which logic to use? 
+
+\section*{Presburger arithmetic}
+
+Integer arithmetic with logical operations (and, or, not), quantifiers, only addition as arithmetic operations, and $<$ and $=$ as a relation. 
+\begin{itemize}
+	\item minimalistically one can define a variant of it over non-negative natural numbers as having $\land, \neg, \forall, +, =$ as the only symbols. 
+\end{itemize}
+
+\begin{tcolorbox}[
+    enhanced,
+    frame hidden,
+    borderline west={2pt}{0pt}{black},
+    boxsep=5pt,
+    left=8pt
+]
+\textbf{Definition.} One-Point Rule: If $\bar{y}$ is a tuple of variables not containing $x$, then $$\exists x. (x = t(\bar{y}) \land F(x, \bar{y})) \Leftrightarrow F(t(\bar{y}), \bar{y})$$
+\begin{itemize}
+	\item \textit{One point rule}: replaces LHS of equivalence by the RHS
+	\item \textit{Flattening}: used when \textit{t} is complex, replaces RHS BY LHS.  \\
+
+\end{itemize}
+By the same reasoning, we have \textbf{dual one-point rule for} $\forall$ $$\neg (\exists x. (x = t(\bar{y}) \land F(x, \bar{y})) \Leftrightarrow F(t(\bar{y}), \bar{y}))$$ which is equivalent to $$\forall x. (x = t(\bar{y}) \to \neg F(x, \bar{y})) \Leftrightarrow \neg F(t(\bar{y}), \bar{y})$$ 
+
+Hence we can deduce $$\forall x. (x = t(\bar{y}) \to F(x, \bar{y})) \Leftrightarrow F(t(\bar{y}), \bar{y})$$
+\end{tcolorbox}
+
+\subsection*{Quantifier Elimination (QE)}
+Given a formula $F(\bar{y})$ containing quantifiers, find a formula $G(\bar{y})$ \textbf{equivalent} to $F(\bar{y})$, that has \textbf{no quantifiers}, and has a \textbf{subset (or equal set) of free variables} of \textit{F}.
+
+
+\begin{itemize}
+	\item To check satisfiability of $H(\bar{y})$: eliminate the quantifiers from $\exists \bar{y}. H(\bar{y})$ and evaluate. 
+	\item Validity: eliminate quantifiers from $\forall \bar{y}. H(\bar{y})$ and evaluate. 
+\end{itemize}
+
+\begin{tcolorbox}[
+  colback=gray!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Does Presburger Arithmetic admit QE?}
+\vspace{0.3cm}
+
+Depends on the particular set of symbols! Quantifier elimination implies: if you can define some relationship between variables using an arbitrary, possibly quantified formula \textit{F}, then you can also define same \textit{r} using another quantifier-free formula G. \\ 
+
+\textbf{Example}: $\exists y. x = y + y + y$ only have an equivalent formula without quantifiers if we have \textit{divisibility}. 
+\end{tcolorbox}
+
+\subsection*{Presburger Arithmetic (PA)}
+\[
+	\{+, -, =, <\} \cup \{K | K \in \mathbb{Z}\} \cup \{(K \cdot \textbf{\_}) \, | \, K \in \mathbb{Z} \} \cup \{(K | \_ ) \, | \, K \in \mathbb{Z}\}
+.\]
+
+We also have, as usual: $\land, \lor, \neg, \to, \forall, \exists$.
+
+\begin{itemize}
+	\item \textbf{Atomic formula}: a relation applied to argument. \\
+	$t_1 = t_2$, $t_1 < t_2$, $ K \, | \, t$
+	\item \textbf{Literal}: Atomic formula or it's negation \\
+	$\neg (x = y + 1)$
+\end{itemize}
+
+First, we consider the quantifier elimination problem of the form: $$\exists y. \quad L_1 \land ... \land L_n$$ This will prove to be sufficient to eliminate all quantifiers!
+
+The question becomes: can we eliminate $\exists$ from any \textbf{quantifier-free formula}? $$\exists x. F(x, \bar{y})$$ where \textit{F} is quantifier free, meaning that it only has $\land, \lor, \neg$ applied to atomic formulas. Convert \textit{F} to \textbf{disjunctive normal form} where each $C_i$ is a \textbf{conjunction of literals}. $$\exists x. F \Leftrightarrow [\exists x. \bigvee^{m}_{i=1} C_i] \Leftrightarrow \bigvee^{m}_{i=1} (\exists x. C_i) $$
+
+\begin{minipage}[t]{0.46\textwidth}
+\subsubsection*{Nested Existential Quantifiers}
+Eliminate one quantifier at a time:
+\[
+\begin{align}
+\exists x_1.\exists x_2.\exists x_3.\,F_0(x_1,x_2,x_3,\bar{y}) \\
+\rightsquigarrow \exists x_1.\exists x_2.\,F_1(x_1,x_2,\bar{y}) \\
+\rightsquigarrow \exists x_1.\,F_2(x_1,\bar{y}) \\
+\rightsquigarrow F_3(\bar{y})
+\end{align}
+\]
+Each step eliminates $\exists$ from a conjunction of literals (after DNF).
+\end{minipage}\hfill
+\vrule
+\hfill
+\begin{minipage}[t]{0.46\textwidth}
+\subsubsection*{Universal Quantifiers}
+Reduce $\forall$ to the already handled existential case:
+\[
+\forall x.\,F_0(x,\bar{y})
+\;\Leftrightarrow\;
+\neg\big[\exists x.\,\neg F_0(x,\bar{y})\big]
+\]
+$\neg F_0$ is quantifier-free, so
+$\exists x.\,\neg F_0(x,\bar{y}) \rightsquigarrow F_1(\bar{y})$, and therefore
+\[
+\forall x.\,F_0(x,\bar{y})
+\;\rightsquigarrow\;
+\neg F_1(\bar{y})
+\]
+\end{minipage}
+
+\subsubsection*{Removing Any Alternation of Quantifiers}
+Push negations in so that only $\exists$ blocks remain, alternating with negations:
+\begin{align*}
+&\exists x_1.\,\forall x_2.\,\forall x_3.\,\exists x_4.\;F_0(x_1,x_2,x_3,x_4,\bar{y})\\
+\rightsquigarrow\;&\exists x_1.\,\neg\exists x_2.\,\exists x_3.\,\neg\exists x_4.\;F_0(x_1,x_2,x_3,x_4,\bar{y})\\
+\rightsquigarrow\;&\exists x_1.\,\neg\exists x_2.\,\exists x_3.\;\neg F_1(x_1,x_2,x_3,\bar{y})\\
+\rightsquigarrow\;&\exists x_1.\,\neg\exists x_2.\;F_2(x_1,x_2,\bar{y})\\
+\rightsquigarrow\;&\exists x_1.\;\neg F_3(x_1,\bar{y})\\
+\rightsquigarrow\;&F_4(\bar{y})
+\end{align*}
+Each quantifier alternation involves one disjunctive normal form transformation.
+Note that for integers: $$\neg(x < y) \Leftrightarrow y \leq x \quad \quad x < y \Leftrightarrow x + 1 \leq y \quad \quad x \leq y \Leftrightarrow x < y + 1$$ Instead of $\leq$ we chose to use $<$ only. We do not write $x > y$ but only $y < x$, since y is the variable being quantified. 
+
+\textbf{Normal form of terms}: All \textit{terms} are build from $K, +, -, K \cdot \_$, so using standard transformations they can be represented as: $K_0 + \sum^{n}_{i = 1} K_i x_i$. We call such term a \textit{linear term}.
+
+\textbf{Normal form for literals in PA}:
+
+\[
+\begin{array}{l}
+	\neg (t_1 < t_2) \quad \text{becomes} \quad t_2 < t_1 + 1 \\
+	\neg (t_1 = t_2) \quad \text{becomes} \quad t_1 < t_2 \lor t_2 < t_1 \\ 
+	t_1 = t_2 \quad \text{becomes} \quad t_1 < t_2 + 1 \land t_2 < t_1 + 1 \quad (*) \\ 
+	\neg (K \, | \, t) \quad \text{becomes} \quad \bigvee^{K-1}_{i=1} K \, | \, t + i \\
+	t_1 < t_2 \quad \text{becomes} \quad 0 < t_2 - t_1
+\end{array}
+\] 
+To remove generated disjunctions, compute DNF again. \\
+(*) Transformed equalities for simplicity. Usually, handle them directly. 
+
+\textbf{Example:} eliminate \textit{y} from this formula $$\exists y. \, 3y - 2w + 1 > -w \land 2y - 6 < z \land 4 | 5y + 1$$
+
+Simplify/normalize using properties of integer operations: $$\exists y. \quad 0 < -w + \textbf{3y} + 1 \quad \land \quad 0 < \textbf{-2y} + z + 6 \quad \land \quad 4 \, | \, \textbf{5y} + 1$$ Least common multiple of coefficients \textit{M = lcm(3, 2, 5) = 30} $$\exists y. \quad 0 < -10w + \underline{\textbf{30y}} + 10 \quad \land \quad 0 < \underline{\textbf{-30y}} + 15z + 90 \quad \land \quad 24 \, | \, \underline{\textbf{30y}} + 6$$ 
+
+Let \textit{x} denotes \textit{30y}. It is \textbf{not an arbitrary x}. It is divisible by 30. $$ \exists x. \quad 0 < -10w + x + 10 \, \land \, 0 < -x + 15z + 90 \, \land \, 24 \, | \, x + 6 \, \land \, 30 \, | \, x$$  
+
+\begin{tcolorbox}[
+  colback=blue!15,     % background color
+  colframe=black!50,    % border color
+  boxrule=1pt,       % border thickness
+  arc=3mm,             % rounded corners
+  left=4mm, right=4mm, top=2mm, bottom=2mm % padding
+]
+\textbf{Lower and upper bounds}
+\vspace{0.3cm}
+
+Consider the coefficient next to \textit{x} in $0 < t$. If it is -1, move the term to left side. If it is 1, move the remaining terms to the left side. We obtain formula $F_1(x)$ of the form: $$\bigwedge^{L}_{i=1}a_i < x \land \bigwedge^{U}_{j=1} x < b_j \land \bigwedge^{D}_{i=1} K_i \, | \, (x + t_i)$$ If there are no divisibility constraints (\textit{D = 0}), the formula is equivalent to: $$\mathop{\mathrm{max}}\limits_{i} a_i + 1 \leq \mathop{\mathrm{max}}\limits_{j}b_j - 1 \Leftrightarrow \bigwedge_{ij} a_i + 1 < b_j$$
+\end{tcolorbox}
+
+\subsection*{Replacing variable by test terms}
+
+\textit{\underline{Common technique in quantifier elimination}}: replacing $F_1(x)$ with $\bigvee_k F_1(t_k)$, where $t_k$ do not contain \textit{x}. If $F_1(t_k)$ holds then certainly $\exists x. F_1(x)$. The example terms $t_i$ when $D = 0$ and $L > 0$ $$\bigvee_{k=1}^{L} F_1(a_k + 1) \quad \quad \text{ensuring that at least one of them evalutes to max} a_i + 1$$ and if $D>0$, i.e., we have additional divisibility constraints: $$\bigvee^{L}_{k=1} \bigvee^{N}_{i=1} F_1(a_k + i) \quad \quad \text{where N is the lcm of }  K_1, ..., K_D$$
+
+$$ \exists x. F_1(x) \quad \equiv \quad \exists x. \, -10 + 10w < x \, \land \, x < 15z + 90 \, \land \, 24 \, | \, x + 6 \, \land \, 30 \, | \, x$$
+
+Let's denote the lower bound $a_1 = -10w + 10$, $b_1 = 15z + 90$, $K_1 = 24, K_2 = 30$ hence lcm($K_1, K_2$) = 120). 
+
+We replace with $a_1 + i < b_1$, meaning that x is replaced with $-10 + 10w +i$, which corresponds to: 
+\[
+	\bigvee^{120}_{i=1} 10w + i < 100 + 15z \, \land \, 24 \, | \, 10w - 4 + i \, \land \, 30 \, | \, 10w - 10 + i
+\]
+This is the solution. $i$ is convenient written so that we avoid writing 120 disjuncts, but it's not a \textit{variable}. 
+
+\subsection*{No lower bounds}
+
+Consider the case $L = 0$. $$ \bigwedge^{U}_{j=1} x < b_j \land \bigwedge^{D}_{i=1} K_i \, | \, (x + t_i)$$ We cannot try all lower bounds, as there are none. Thus, we can always find a $x$ small enough to satisfy the upper bounds. Hence, we drop all constraints except divisibility, obtaining $F_2(x)$: $$\bigwedge^{D}_{i=1} K_i \, | \, (x + t_i)$$ and then eliminate quantifier as $$\bigvee^{N}_{i=1} F_2(i)$$. \textbf{Example} $$\exists x. \, x < 5 + 7z \, \land \, 2 \, | \, x \, \land 3 \, | \, x + 2$$ N = lcm(2, 3) = 6. $$\bigvee^{6}_{i=1} (2 \, | \, i \, \land \,  3 \, | \, i + 2)$$
+
+\section*{Summary}
+
+This complete the description of a quantifier elimination algorithm for Presburger Arithmetic (PA). 
+
+This algorithm and its correctness prove that: 
+\begin{itemize}
+	\item PA admits quantifier elimination
+	\item Satisfiability, validity, entailment, equivalence of PA formulas is decidable. \\
+	We can use the algorithm to prove verification conditions. \\
+	Not the most efficient way, but gives insights on what can later be build to come up with better algorithms
+	\item Quantified and quantifier-free formulas have the same expressive power. 
+\end{itemize}
+
+Regardless of the procedure, cannot escape inherent computational complexity of deciding if quantified Presburger arithmetic formula is true, which has been characterized using alternating complexity classes by Bernman. 
+
+A set \textit{A} is in \textit{STA(s(n), t(n), a(n))} iff there exists a single-tape \textit{alternating} Turing machine $M_i$ (making $\land$ as well as $\lor$ choices) that accepts \textit{A} and runs withing space \textit{s(n)}, time \textit{t(n)} and performs at most \textit{a(n)} alternations between $\land$ and $\lor$ choices. 
+
+Deciding of a PA formula of size \textit{n} with \textit{m} quantifiers is in $$STA(*, 2^{n^{O(m)}}, m)$$ Complexity is particularly sensitive to \textit{m}. 
+
+\end{document}
